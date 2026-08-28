@@ -992,3 +992,151 @@ button { border: 0; }
   .news-archive-grid { display:grid; grid-template-columns:1fr; gap:10px; overflow:visible; }
   .news-archive-grid .news-card { width:auto; flex:auto; }
 }
+
+/* v16 — general industrial climbing hero */
+.hero-overview {
+  min-height: 680px;
+  display: flex;
+  align-items: center;
+  padding: 76px 0 88px;
+  background:
+    radial-gradient(circle at 76% 43%, rgba(66,214,232,.055), transparent 18%),
+    radial-gradient(circle at 12% 12%, rgba(66,214,232,.08), transparent 28%),
+    linear-gradient(180deg, #07131f 0%, #06111b 100%);
+}
+.hero-overview::after {
+  opacity: .10;
+  background-size: 92px 92px;
+}
+.hero-overview-grid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(330px, .9fr);
+  gap: 80px;
+  align-items: center;
+}
+.hero-overview-copy { max-width: 690px; padding: 0; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 14px;
+  border: 1px solid rgba(66,214,232,.22);
+  border-radius: 999px;
+  background: rgba(66,214,232,.055);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.hero-overview h1 {
+  max-width: 680px;
+  margin: 20px 0 20px;
+  font-size: clamp(54px, 5vw, 78px);
+  line-height: .98;
+}
+.hero-overview h1 span { display: block; }
+.hero-overview .hero-lead { max-width: 620px; color: #9eb7c4; font-size: 18px; line-height: 1.6; }
+.hero-overview-actions { margin-top: 30px; }
+.hero-overview-actions .button { min-width: 156px; }
+.hero-overview-actions .button-primary span { margin-left: 10px; font-size: 18px; line-height: 1; }
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  max-width: 610px;
+  margin-top: 46px;
+}
+.hero-stat { min-width: 0; }
+.hero-stat strong {
+  display: block;
+  color: var(--accent);
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+.hero-stat span {
+  display: block;
+  margin-top: 8px;
+  color: #6f8997;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.hero-emblem {
+  position: relative;
+  width: min(440px, 34vw);
+  aspect-ratio: 1;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+}
+.hero-ring {
+  position: absolute;
+  border: 1px solid rgba(66,214,232,.13);
+  border-radius: 50%;
+}
+.hero-ring-1 { width: 62%; height: 62%; }
+.hero-ring-2 { width: 44%; height: 44%; }
+.hero-ring-3 { width: 27%; height: 27%; }
+.hero-diamond {
+  position: relative;
+  display: block;
+  width: 70px;
+  height: 70px;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #60e5f3, #28b9cf);
+  box-shadow: 0 0 55px rgba(66,214,232,.22);
+  transform: rotate(45deg);
+}
+.hero-diamond::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(4,36,47,.32);
+  border-radius: 8px;
+}
+
+@media (max-width: 1080px) {
+  .hero-overview-grid { grid-template-columns: minmax(0,1fr) 300px; gap: 36px; }
+  .hero-emblem { width: 290px; }
+  .hero-overview h1 { font-size: clamp(48px, 6vw, 66px); }
+}
+
+@media (max-width: 820px) {
+  .hero-overview { min-height: 0; padding: 58px 0 64px; }
+  .hero-overview-grid { grid-template-columns: 1fr; gap: 24px; }
+  .hero-overview-copy { max-width: 700px; }
+  .hero-emblem {
+    position: absolute;
+    right: -80px;
+    top: 90px;
+    width: 280px;
+    opacity: .18;
+    pointer-events: none;
+  }
+  .hero-overview .hero-lead { max-width: 560px; }
+}
+
+@media (max-width: 640px) {
+  .hero-overview { padding: 30px 0 38px; }
+  .hero-overview-grid { gap: 0; }
+  .hero-badge { min-height: 27px; padding: 0 10px; font-size: 8px; letter-spacing: .06em; }
+  .hero-overview h1 { margin: 13px 0 12px; font-size: clamp(36px, 11.6vw, 48px); line-height: .98; }
+  .hero-overview .hero-lead { max-width: 96%; font-size: 13px; line-height: 1.5; }
+  .hero-overview-actions { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
+  .hero-overview-actions .button { min-width: 0; min-height: 42px; padding: 0 11px; font-size: 11px; }
+  .hero-overview-actions .button-primary span { margin-left: 5px; font-size: 14px; }
+  .hero-stats { gap: 10px; margin-top: 24px; }
+  .hero-stat strong { font-size: 20px; }
+  .hero-stat span { margin-top: 5px; font-size: 7px; line-height: 1.3; letter-spacing: .06em; }
+  .hero-emblem { right: -105px; top: 78px; width: 235px; opacity: .09; }
+  .hero-diamond { width: 52px; height: 52px; border-radius: 10px; }
+}
+
+@media (max-width: 360px) {
+  .hero-overview h1 { font-size: 34px; }
+  .hero-overview-actions { grid-template-columns: 1fr; }
+  .hero-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .hero-stat strong { font-size: 18px; }
+}
