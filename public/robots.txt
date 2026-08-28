@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
-Sitemap: https://airus74.ru/sitemap.xml
+Sitemap: https://climber74.ru/sitemap.xml

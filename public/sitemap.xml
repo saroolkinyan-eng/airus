@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://airus74.ru/</loc>
-    <lastmod>2026-08-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://airus74.ru/privacy.html</loc>
-    <lastmod>2026-08-28</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://airus74.ru/consent.html</loc>
-    <lastmod>2026-08-28</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
+  <url><loc>https://climber74.ru/</loc></url>
+  <url><loc>https://climber74.ru/cleaning/</loc></url>
+  <url><loc>https://climber74.ru/cleaning/balcony/</loc></url>
+  <url><loc>https://climber74.ru/roof/</loc></url>
+  <url><loc>https://climber74.ru/installation/</loc></url>
+  <url><loc>https://climber74.ru/facade_works/</loc></url>
+  <url><loc>https://climber74.ru/news/</loc></url>
+  <url><loc>https://climber74.ru/privacy.html</loc></url>
+  <url><loc>https://climber74.ru/consent.html</loc></url>
 </urlset>

@@ -27,7 +27,7 @@ function securityHeaders(req, res, next) {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; style-src 'self'; script-src 'self' 'sha256-yhwwvv8h1VvC+KbdpRdq9tpUptBGFciwn4HYOzQJB+M='; connect-src 'self'; font-src 'self'"
+    "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data: https://climber74.ru; style-src 'self'; script-src 'self' 'sha256-yhwwvv8h1VvC+KbdpRdq9tpUptBGFciwn4HYOzQJB+M='; connect-src 'self'; font-src 'self'"
   );
   if (req.path.startsWith('/admin')) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
