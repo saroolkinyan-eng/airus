@@ -1511,3 +1511,22 @@ html, body { max-width:100%; overflow-x:hidden; }
 @media (max-width: 760px) {
   .order-section-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+.header-burger {
+  display:none;
+  width:34px; height:34px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  background:transparent;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:5px;
+}
+.header-burger span { width:18px; height:2px; background:#fff; display:block; }
+@media (max-width:640px){
+  .header-inner { grid-template-columns:auto 1fr auto; }
+  .main-nav { display:none; }
+  .header-actions { justify-content:flex-end; }
+  .header-burger { display:flex; }
+}
