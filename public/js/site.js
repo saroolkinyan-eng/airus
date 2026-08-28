@@ -96,7 +96,7 @@
       zhkSelect,
       zhks,
       city ? 'Выберите ЖК' : 'Сначала выберите город',
-      city ? { value: OTHER_ZHK, label: 'Моего ЖК нет / частный адрес' } : null
+      city ? { value: OTHER_ZHK, label: 'Другой объект / адрес' } : null
     );
     zhkSelect.disabled = !city;
     fillSelect(addressSelect, [], 'Сначала выберите ЖК');
@@ -167,7 +167,7 @@
   }
 
   function resolveZhk() {
-    if (zhkSelect.value === OTHER_ZHK) return customZhkInput.value.trim() || 'Другой адрес / частный дом';
+    if (zhkSelect.value === OTHER_ZHK) return customZhkInput.value.trim() || 'Другой объект / адрес';
     return zhkSelect.value.trim();
   }
 
@@ -268,6 +268,26 @@
     }, 450);
   }
   openButtons.forEach((button) => button.addEventListener('click', scrollToOrder));
+
+  function selectService(serviceName, shouldScroll = true) {
+    const target = serviceInputs.find((input) => input.value === serviceName);
+    if (!target) return false;
+    target.checked = true;
+    target.dispatchEvent(new Event('change', { bubbles: true }));
+    currentStep = 1;
+    renderSteps();
+    if (shouldScroll) scrollToOrder();
+    return true;
+  }
+
+  document.querySelectorAll('[data-order-service]').forEach((button) => {
+    button.addEventListener('click', () => selectService(button.dataset.orderService));
+  });
+
+  const initialService = new URLSearchParams(location.search).get('service');
+  if (initialService) {
+    selectService(initialService, location.hash === '#order-request' || location.hash === '#request');
+  }
 
   function resetForm() {
     form.reset();

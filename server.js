@@ -83,6 +83,9 @@ db.serialize(() => {
     consent_at DATETIME,
     consent_version TEXT DEFAULT '',
     source TEXT DEFAULT 'website',
+    is_read INTEGER DEFAULT 0,
+    viewed_at DATETIME,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
@@ -94,6 +97,19 @@ db.serialize(() => {
   ensureColumn('orders', 'consent_at', `DATETIME`);
   ensureColumn('orders', 'consent_version', `TEXT DEFAULT ''`);
   ensureColumn('orders', 'source', `TEXT DEFAULT 'website'`);
+  ensureColumn('orders', 'is_read', `INTEGER DEFAULT 1`);
+  ensureColumn('orders', 'viewed_at', `DATETIME`);
+  ensureColumn('orders', 'updated_at', `TEXT DEFAULT ''`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS order_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    event_type TEXT NOT NULL,
+    label TEXT NOT NULL,
+    details TEXT DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE
+  )`);
 
   db.run(`CREATE TABLE IF NOT EXISTS admin_sessions (
     token_hash TEXT PRIMARY KEY,
@@ -102,6 +118,8 @@ db.serialize(() => {
   )`);
   db.run('CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)');
   db.run('CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_orders_phone ON orders(phone)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_order_events_order_id ON order_events(order_id)');
 });
 
 function scryptHash(password, salt) {
@@ -282,6 +300,23 @@ function csvCell(value) {
   return `"${text.replace(/"/g, '""')}"`;
 }
 
+function addOrderEvent(orderId, eventType, label, details = '') {
+  db.run(
+    'INSERT INTO order_events (order_id, event_type, label, details) VALUES (?, ?, ?, ?)',
+    [orderId, cleanText(eventType, 60), cleanText(label, 180), cleanText(details, 1200)],
+    (err) => { if (err) console.error('Order event insert error:', err.message); }
+  );
+}
+
+function readableFieldChange(label, before, after) {
+  const a = cleanText(before, 300);
+  const b = cleanText(after, 300);
+  if (a === b) return '';
+  if (!a && b) return `${label}: ${b}`;
+  if (a && !b) return `${label}: очищено`;
+  return `${label}: ${a} → ${b}`;
+}
+
 app.post('/api/orders', publicOrderLimiter, (req, res) => {
   const o = req.body || {};
 
@@ -310,8 +345,8 @@ app.post('/api/orders', publicOrderLimiter, (req, res) => {
   if (!consent) return res.status(400).json({ ok: false, error: 'Нужно подтвердить согласие на обработку персональных данных' });
 
   const stmt = `INSERT INTO orders
-    (name, phone, city, zhk, street, house, entrance, flat, floor, service, comment, status, admin_note, next_contact, consent_at, consent_version, source)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)`;
+    (name, phone, city, zhk, street, house, entrance, flat, floor, service, comment, status, admin_note, next_contact, consent_at, consent_version, source, is_read, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, 0, CURRENT_TIMESTAMP)`;
 
   db.run(stmt, [
     name,
@@ -335,6 +370,7 @@ app.post('/api/orders', publicOrderLimiter, (req, res) => {
       console.error('Order insert error:', err.message);
       return res.status(500).json({ ok: false, error: 'Не удалось сохранить заявку. Позвоните нам по телефону.' });
     }
+    addOrderEvent(this.lastID, 'created', 'Заявка создана', `${service} · ${city}, ${address}`);
     res.status(201).json({ ok: true, id: this.lastID });
   });
 });
@@ -387,7 +423,7 @@ app.get('/api/orders/export.csv', requireAdmin, (req, res) => {
     if (err) return res.status(500).json({ ok: false, error: 'Не удалось сформировать экспорт' });
     const columns = [
       'id', 'created_at', 'status', 'city', 'zhk', 'house', 'entrance', 'flat', 'floor',
-      'service', 'name', 'phone', 'comment', 'admin_note', 'next_contact', 'consent_at', 'consent_version'
+      'service', 'name', 'phone', 'comment', 'admin_note', 'next_contact', 'is_read', 'viewed_at', 'updated_at', 'consent_at', 'consent_version'
     ];
     const body = [columns.join(';')]
       .concat((rows || []).map((row) => columns.map((col) => csvCell(row[col])).join(';')))
@@ -405,51 +441,86 @@ app.get('/api/orders', requireAdmin, (req, res) => {
   });
 });
 
+app.get('/api/orders/:id/events', requireAdmin, (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) return res.status(400).json({ ok: false, error: 'Некорректный ID' });
+  db.all('SELECT id, event_type, label, details, created_at FROM order_events WHERE order_id = ? ORDER BY id DESC LIMIT 100', [id], (err, rows) => {
+    if (err) return res.status(500).json({ ok: false, error: 'Не удалось загрузить историю' });
+    res.json(rows || []);
+  });
+});
+
 app.patch('/api/orders/:id', requireAdminMutation, (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id <= 0) return res.status(400).json({ ok: false, error: 'Некорректный ID' });
 
-  const updates = [];
-  const values = [];
-  const body = req.body || {};
+  db.get('SELECT * FROM orders WHERE id = ?', [id], (readErr, current) => {
+    if (readErr) return res.status(500).json({ ok: false, error: 'Не удалось прочитать заявку' });
+    if (!current) return res.status(404).json({ ok: false, error: 'Заявка не найдена' });
 
-  if (Object.prototype.hasOwnProperty.call(body, 'status')) {
-    const status = cleanText(body.status, 40);
-    if (!ALLOWED_STATUSES.has(status)) return res.status(400).json({ ok: false, error: 'Некорректный статус' });
-    updates.push('status = ?');
-    values.push(status);
-  }
+    const updates = [];
+    const values = [];
+    const events = [];
+    const body = req.body || {};
 
-  if (Object.prototype.hasOwnProperty.call(body, 'admin_note')) {
-    updates.push('admin_note = ?');
-    values.push(cleanText(body.admin_note, 3000));
-  }
-
-  if (Object.prototype.hasOwnProperty.call(body, 'next_contact')) {
-    const nextContact = cleanText(body.next_contact, 40);
-    if (nextContact && Number.isNaN(Date.parse(nextContact))) {
-      return res.status(400).json({ ok: false, error: 'Некорректная дата следующего контакта' });
+    if (Object.prototype.hasOwnProperty.call(body, 'status')) {
+      const status = cleanText(body.status, 40);
+      if (!ALLOWED_STATUSES.has(status)) return res.status(400).json({ ok: false, error: 'Некорректный статус' });
+      updates.push('status = ?');
+      values.push(status);
+      if (status !== current.status) events.push(['status', 'Статус изменён', readableFieldChange('Статус', current.status, status)]);
     }
-    updates.push('next_contact = ?');
-    values.push(nextContact);
-  }
 
-  if (!updates.length) return res.status(400).json({ ok: false, error: 'Нет данных для изменения' });
-  values.push(id);
-  db.run(`UPDATE orders SET ${updates.join(', ')} WHERE id = ?`, values, function onUpdate(err) {
-    if (err) return res.status(500).json({ ok: false, error: 'Не удалось обновить заявку' });
-    if (!this.changes) return res.status(404).json({ ok: false, error: 'Заявка не найдена' });
-    res.json({ ok: true, changes: this.changes });
+    if (Object.prototype.hasOwnProperty.call(body, 'admin_note')) {
+      const note = cleanText(body.admin_note, 3000);
+      updates.push('admin_note = ?');
+      values.push(note);
+      if (note !== String(current.admin_note || '')) events.push(['note', 'Заметка обновлена', note || 'Заметка очищена']);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, 'next_contact')) {
+      const nextContact = cleanText(body.next_contact, 40);
+      if (nextContact && Number.isNaN(Date.parse(nextContact))) {
+        return res.status(400).json({ ok: false, error: 'Некорректная дата следующего контакта' });
+      }
+      updates.push('next_contact = ?');
+      values.push(nextContact);
+      if (nextContact !== String(current.next_contact || '')) events.push(['contact', 'Следующий контакт изменён', readableFieldChange('Контакт', current.next_contact, nextContact)]);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, 'is_read')) {
+      const isRead = body.is_read === true || body.is_read === 1 || body.is_read === '1';
+      updates.push('is_read = ?');
+      values.push(isRead ? 1 : 0);
+      if (isRead && !Number(current.is_read)) {
+        updates.push('viewed_at = CURRENT_TIMESTAMP');
+        events.push(['viewed', 'Заявка просмотрена', 'Открыта в админ-панели']);
+      }
+    }
+
+    if (!updates.length) return res.status(400).json({ ok: false, error: 'Нет данных для изменения' });
+    updates.push('updated_at = CURRENT_TIMESTAMP');
+    values.push(id);
+
+    db.run(`UPDATE orders SET ${updates.join(', ')} WHERE id = ?`, values, function onUpdate(err) {
+      if (err) return res.status(500).json({ ok: false, error: 'Не удалось обновить заявку' });
+      if (!this.changes) return res.status(404).json({ ok: false, error: 'Заявка не найдена' });
+      events.forEach(([type, label, details]) => addOrderEvent(id, type, label, details));
+      res.json({ ok: true, changes: this.changes });
+    });
   });
 });
 
 app.delete('/api/orders/:id', requireAdminMutation, (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id <= 0) return res.status(400).json({ ok: false, error: 'Некорректный ID' });
-  db.run('DELETE FROM orders WHERE id = ?', [id], function onDelete(err) {
-    if (err) return res.status(500).json({ ok: false, error: 'Не удалось удалить заявку' });
-    if (!this.changes) return res.status(404).json({ ok: false, error: 'Заявка не найдена' });
-    res.json({ ok: true, changes: this.changes });
+  db.run('DELETE FROM order_events WHERE order_id = ?', [id], (eventsErr) => {
+    if (eventsErr) return res.status(500).json({ ok: false, error: 'Не удалось удалить историю заявки' });
+    db.run('DELETE FROM orders WHERE id = ?', [id], function onDelete(err) {
+      if (err) return res.status(500).json({ ok: false, error: 'Не удалось удалить заявку' });
+      if (!this.changes) return res.status(404).json({ ok: false, error: 'Заявка не найдена' });
+      res.json({ ok: true, changes: this.changes });
+    });
   });
 });
 

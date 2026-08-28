@@ -6,13 +6,13 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>АйRus — панель заказов</title>
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../css/admin.css?v=9">
+  <link rel="stylesheet" href="../css/admin.css?v=20">
 </head>
 <body class="admin-body">
   <header class="admin-header">
     <div class="admin-container admin-header-inner">
       <a class="admin-brand" href="/admin/dashboard.html" title="К выбору городов"><span>Ай</span>Rus</a>
-      <div class="admin-header-title">Панель заказов</div>
+      <div class="admin-header-title">Панель заказов <span id="newOrdersBadge" class="new-orders-badge">0 новых</span></div>
       <div class="admin-header-tools">
         <label class="search-shell">
           <span>⌕</span>
@@ -25,11 +25,27 @@
 
   <main class="admin-main">
     <div class="admin-container">
-      <section class="admin-toolbar">
-        <div id="statusTabs" class="status-tabs" aria-label="Фильтр по статусу"></div>
-        <div class="toolbar-actions">
-          <a class="admin-btn admin-btn-secondary" href="/api/orders/export.csv">Экспорт CSV</a>
-          <button class="admin-btn admin-btn-secondary" id="resetViewBtn" type="button">Сбросить</button>
+      <section class="admin-toolbar admin-toolbar-stack">
+        <div class="toolbar-primary-row">
+          <div id="statusTabs" class="status-tabs" aria-label="Фильтр по статусу"></div>
+          <div class="toolbar-actions">
+            <a class="admin-btn admin-btn-secondary" href="/api/orders/export.csv">Экспорт CSV</a>
+            <button class="admin-btn admin-btn-secondary" id="resetViewBtn" type="button">Сбросить</button>
+          </div>
+        </div>
+        <div class="quick-filters" aria-label="Быстрые фильтры">
+          <button class="quick-filter" type="button" data-quick="unread">Непрочитанные <span id="unreadFilterCount">0</span></button>
+          <button class="quick-filter" type="button" data-quick="today">Сегодня</button>
+          <button class="quick-filter" type="button" data-quick-city="Челябинск">Челябинск</button>
+          <button class="quick-filter" type="button" data-quick-city="Уфа">Уфа</button>
+          <select id="serviceFilter" class="quick-filter-select" aria-label="Фильтр по услуге">
+            <option value="">Все услуги</option>
+            <option>Мойка окон и фасадов</option>
+            <option>Очистка крыш от снега</option>
+            <option>Высотные монтажные работы</option>
+            <option>Фасадные работы</option>
+          </select>
+          <button class="quick-filter" type="button" data-quick="duplicates">Дубли телефонов</button>
         </div>
       </section>
 
@@ -86,6 +102,11 @@
         <textarea id="dialogNote" rows="5" maxlength="3000" placeholder="Что обсудили, что уточнить, договорённости"></textarea>
       </label>
 
+      <section class="history-section" aria-labelledby="historyTitle">
+        <div class="history-head"><span>История работы</span><small id="historyMeta">События по заявке</small></div>
+        <div id="dialogHistory" class="order-history"><div class="history-loading">Загрузка истории…</div></div>
+      </section>
+
       <div class="dialog-actions">
         <button class="admin-btn admin-btn-secondary" type="button" id="cancelDialog">Отмена</button>
         <button class="admin-btn admin-btn-primary" type="submit" id="saveDialog">Сохранить</button>
@@ -94,6 +115,6 @@
     </form>
   </dialog>
 
-  <script src="../js/admin-dashboard.js?v=9" defer></script>
+  <script src="../js/admin-dashboard.js?v=20" defer></script>
 </body>
 </html>

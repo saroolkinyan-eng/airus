@@ -119,3 +119,17 @@ After a successful admin login, the device can be remembered for 30 days (enable
 Going back to the public website does NOT log the admin out. The main-site button changes from "Войти" to "Админка" while the session is valid.
 The logout button in the admin panel invalidates the token and forgets the device.
 Remembered sessions are stored in the same SQLite database, so for persistence across Render restarts/deploys use AIRUS_DATA_DIR on a Persistent Disk.
+
+V20 PREMIUM / CRM
+-----------------
+- Карточки направлений на главной теперь имеют отдельные действия «Подробнее» и «Заказать».
+- «Заказать» автоматически выбирает нужную услугу в форме заявки.
+- Полноценные страницы направлений: /cleaning/, /roof/, /installation/, /facade_works/.
+- На страницах услуг добавлены описание, процесс, ориентировочные цены, FAQ и CTA на заявку.
+- Админка: быстрые фильтры «Непрочитанные», «Сегодня», города, услуги, дубли телефонов.
+- Админка: непрочитанные заявки визуально выделяются до первого открытия.
+- Админка: история заявки хранится в таблице order_events (создание, просмотр, статусы, заметки, следующий контакт).
+- Админка: повторные заявки по одному номеру телефона отмечаются как дубли.
+- Визуальная система v20: premium-панели, мягкие тени, более плавные переходы, reveal-анимации и hover-эффекты.
+- Анимации отключаются/сокращаются автоматически при prefers-reduced-motion.
+- Для сохранения заявок, истории и remembered-device сессий между деплоями по-прежнему нужен Persistent Disk и AIRUS_DATA_DIR.
