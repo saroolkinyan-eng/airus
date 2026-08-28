@@ -239,22 +239,47 @@
           <div class="order-card-head">
             <div>
               <span class="card-kicker">Заявка на расчёт</span>
-              <h2 id="orderTitle">Найдите свой дом</h2>
+              <h2 id="orderTitle">Выберите работу и объект</h2>
             </div>
             <span class="secure-label">Без лишних звонков</span>
           </div>
 
           <div class="wizard-progress" aria-label="Шаги формы">
-            <button class="wizard-step is-active" type="button" data-step="1"><span>1</span><b>Город</b></button>
+            <button class="wizard-step is-active" type="button" data-step="1"><span>1</span><b>Работа</b></button>
             <button class="wizard-step" type="button" data-step="2"><span>2</span><b>Адрес</b></button>
             <button class="wizard-step" type="button" data-step="3"><span>3</span><b>Контакт</b></button>
           </div>
 
           <form id="orderForm" class="wizard-form" novalidate>
-            <input type="hidden" id="service" value="Коллективная мойка балконов">
             <label class="hp-field" aria-hidden="true">Ваш сайт<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
 
-            <section class="wizard-panel is-active" data-panel="1" aria-label="Шаг 1. Город">
+            <section class="wizard-panel is-active" data-panel="1" aria-label="Шаг 1. Работа и город">
+              <fieldset class="service-picker">
+                <legend>Какая работа нужна?</legend>
+                <div class="service-picker-grid">
+                  <label class="service-choice">
+                    <input type="radio" name="service" value="Мойка окон и фасадов" required>
+                    <span class="service-choice-index">01</span>
+                    <span class="service-choice-text">Мойка окон и фасадов</span>
+                  </label>
+                  <label class="service-choice">
+                    <input type="radio" name="service" value="Очистка крыш от снега" required>
+                    <span class="service-choice-index">02</span>
+                    <span class="service-choice-text">Очистка крыш от снега</span>
+                  </label>
+                  <label class="service-choice">
+                    <input type="radio" name="service" value="Высотные монтажные работы" required>
+                    <span class="service-choice-index">03</span>
+                    <span class="service-choice-text">Высотные монтажные работы</span>
+                  </label>
+                  <label class="service-choice">
+                    <input type="radio" name="service" value="Фасадные работы" required>
+                    <span class="service-choice-index">04</span>
+                    <span class="service-choice-text">Фасадные работы</span>
+                  </label>
+                </div>
+              </fieldset>
+
               <label class="field">
                 <span>Город</span>
                 <select id="city" name="city" required>
@@ -263,7 +288,7 @@
                   <option value="Уфа">Уфа</option>
                 </select>
               </label>
-              <p class="field-help">Список ЖК и домов изменится автоматически.</p>
+              <p class="field-help">На следующем шаге выберете ЖК и адрес объекта.</p>
               <div class="wizard-actions end">
                 <button class="button button-primary" type="button" data-next-step>Далее</button>
               </div>

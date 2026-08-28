@@ -56,6 +56,7 @@
   const customZhkInput = document.getElementById('customZhk');
   const manualAddressInput = document.getElementById('manualAddress');
   const phoneInput = document.getElementById('phone');
+  const serviceInputs = Array.from(document.querySelectorAll('input[name="service"]'));
   const steps = Array.from(document.querySelectorAll('.wizard-step'));
   const panels = Array.from(document.querySelectorAll('.wizard-panel'));
   const openButtons = document.querySelectorAll('.open-order');
@@ -170,8 +171,18 @@
     return zhkSelect.value.trim();
   }
 
+  function selectedService() {
+    return serviceInputs.find((input) => input.checked)?.value || '';
+  }
+
   function validateStep(step) {
     setAlert();
+
+    if (step >= 2 && !selectedService()) {
+      setAlert('error', 'Выберите вид работ.');
+      serviceInputs[0]?.focus();
+      return false;
+    }
 
     if (step >= 2 && !citySelect.value) {
       setAlert('error', 'Выберите город.');
@@ -221,6 +232,8 @@
     const digits = String(value).replace(/\D/g, '');
     return digits.length === 11 && (digits.startsWith('7') || digits.startsWith('8'));
   }
+
+  serviceInputs.forEach((input) => input.addEventListener('change', () => setAlert()));
 
   citySelect.addEventListener('change', () => {
     updateZhkOptions();
@@ -292,7 +305,7 @@
     }
 
     const payload = {
-      service: document.getElementById('service').value,
+      service: selectedService(),
       city: citySelect.value,
       zhk: resolveZhk(),
       house: resolveAddress(),
