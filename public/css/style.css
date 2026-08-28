@@ -1512,3 +1512,180 @@ h1,h2,h3,.brand-mark,strong { font-variation-settings:"wght" 650; }
 .service-prices { background:#eee9df; }
 .service-faq-section { background:#f7f4ed; }
 .service-bottom-cta { background:linear-gradient(120deg,#181716,#0b0b0c); }
+
+/* ===== AIRUS v22 / News readability + mobile polish ===== */
+
+/* News cards use a light surface in v21, so their typography must also use the light palette. */
+.news-section {
+  background:
+    radial-gradient(circle at 92% 0%, rgba(214,185,119,.08), transparent 30%),
+    linear-gradient(180deg,#111112 0%,#0b0b0c 100%);
+}
+.news-card {
+  color:var(--light-text);
+  border-color:#ddd7ca;
+  background:linear-gradient(155deg,#fffdf8 0%,#f5f0e6 100%);
+  box-shadow:0 24px 70px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.86);
+}
+.news-card-featured {
+  border-color:rgba(168,132,69,.36);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(214,185,119,.2),transparent 38%),
+    linear-gradient(145deg,#fffaf0,#eee4cf);
+}
+.news-date {
+  margin-bottom:18px;
+  color:#9a753b;
+  font-weight:750;
+}
+.news-card h3 {
+  color:#1b1916;
+  font-weight:650;
+  text-wrap:balance;
+}
+.news-card p {
+  color:#686157;
+}
+.news-link {
+  color:#8b672f;
+}
+.news-link:hover { color:#5f431d; }
+.news-archive-grid {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.news-archive-grid .news-card {
+  min-height:300px;
+}
+
+/* Article pages: warmer neutral contrast, matching the Obsidian / Champagne system. */
+.article-hero .article-date { color:#d9bd7b; }
+.article-detail > p { color:#c4beb4; }
+.article-note {
+  border-color:rgba(214,185,119,.3);
+  background:rgba(214,185,119,.08);
+  color:#c9c1b4;
+}
+.article-note strong { color:#f7f1e6; }
+.article-side {
+  border-color:rgba(235,218,179,.14);
+  background:linear-gradient(145deg,#19191b,#111112);
+}
+.article-side p { color:#aaa398; }
+.article-side a { color:#d6b977; }
+
+/* Prevent accidental horizontal page overflow on narrow devices. */
+html, body { max-width:100%; overflow-x:hidden; }
+
+@media (max-width: 760px) {
+  .container { width:min(calc(100% - 28px),var(--container)); }
+  .site-header { position:sticky; top:0; }
+  .header-inner { min-height:62px; }
+  .brand-mark { font-size:22px; }
+  .admin-login-link { min-height:38px; padding-inline:12px; }
+
+  .button { min-height:44px; }
+  .section { padding:52px 0; }
+  .section-heading { margin-bottom:24px; }
+  .section-heading h2,.value-section h2,.contact-panel h2 {
+    font-size:clamp(29px,8.5vw,36px);
+    line-height:1.03;
+  }
+  .section-heading p,.section-lead { font-size:13px; line-height:1.6; }
+
+  /* News is a readable vertical feed on phones instead of a clipped horizontal carousel. */
+  .news-grid,.legacy-news-grid,.news-archive-grid {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    margin-right:0;
+    padding-bottom:0;
+    overflow:visible;
+  }
+  .news-card,.news-archive-grid .news-card {
+    width:100%;
+    min-height:0;
+    padding:20px;
+    border-radius:18px;
+  }
+  .news-date { margin-bottom:10px; font-size:10px; line-height:1.4; }
+  .news-card h3 { margin-bottom:9px; font-size:20px; line-height:1.18; }
+  .news-card p {
+    display:block;
+    overflow:visible;
+    -webkit-line-clamp:unset;
+    margin-bottom:16px;
+    font-size:13px;
+    line-height:1.6;
+  }
+  .news-link { font-size:13px; }
+  .news-all-wrap { margin-top:16px; }
+
+  /* Main page: less cramped typography and controls. */
+  .process-card p,.value-cards span,.client-card p,.faq-list p,.contact-panel p {
+    font-size:12px;
+    line-height:1.55;
+  }
+  .process-card h3 { font-size:17px; }
+  .value-cards strong { font-size:15px; }
+  .faq-list summary { font-size:14px; }
+  .contact-links a { min-width:0; }
+  .contact-links strong { overflow-wrap:anywhere; }
+
+  /* Service and article pages. */
+  .legacy-page { padding-bottom:0; }
+  .legacy-page-main { padding:38px 0 64px; }
+  .legacy-page-hero { min-height:230px; }
+  .legacy-page-hero .container { padding-top:64px; padding-bottom:30px; }
+  .legacy-page-hero h1 { font-size:clamp(34px,10vw,46px); line-height:1; }
+  .article-layout { gap:24px; }
+  .article-detail { max-width:none; }
+  .article-detail > p { font-size:14px; line-height:1.7; }
+  .article-detail h2 { font-size:24px; line-height:1.15; }
+  .article-note { font-size:13px; line-height:1.6; }
+  .article-side { padding:18px; }
+  .article-side p { font-size:12px; }
+  .service-hero-actions { flex-wrap:wrap; }
+  .service-hero-actions .button { flex:1 1 190px; }
+}
+
+@media (max-width: 480px) {
+  .container { width:min(calc(100% - 20px),var(--container)); }
+  .header-inner { gap:8px; }
+  .brand-mark { font-size:21px; }
+  .admin-login-link { min-height:36px; padding-inline:10px; font-size:10px; }
+
+  .hero-actions,.form-grid { grid-template-columns:1fr; }
+  .hero-actions .button,.wizard-actions .button { width:100%; }
+  .wizard-actions { flex-wrap:wrap; }
+
+  .work-gallery { grid-template-columns:1fr; }
+  .work-card,.work-card-large { min-height:230px; }
+  .work-card h3 { font-size:18px; }
+  .work-card p { display:block; font-size:11px; line-height:1.4; }
+
+  .value-cards article { grid-template-columns:1fr; gap:4px; }
+  .contact-panel { padding:20px 16px; }
+  .contact-links strong { font-size:12px; }
+
+  .article-actions { display:grid; grid-template-columns:1fr; }
+  .article-actions .button { width:100%; }
+  .service-hero-actions { display:grid; grid-template-columns:1fr; }
+  .service-hero-actions .button { width:100%; }
+
+  .news-card,.news-archive-grid .news-card { padding:18px 16px; }
+  .news-card h3 { font-size:19px; }
+}
+
+
+/* ===== AIRUS v23 / homepage cleanup ===== */
+/* The explanatory request copy was removed; keep the working form centered and full-width. */
+.order-section-grid {
+  grid-template-columns: minmax(0, 900px);
+  justify-content: center;
+}
+.order-section .order-card { width: 100%; }
+
+@media (max-width: 760px) {
+  .order-section-grid { grid-template-columns: minmax(0, 1fr); }
+}
