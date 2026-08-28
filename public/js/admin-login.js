@@ -23,7 +23,8 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           login: document.getElementById('login').value.trim(),
-          password: document.getElementById('password').value
+          password: document.getElementById('password').value,
+          rememberDevice: document.getElementById('rememberDevice')?.checked !== false
         })
       });
       const data = await response.json().catch(() => ({}));

@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>АйRus — вход в панель заказов</title>
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../css/admin.css?v=7">
+  <link rel="stylesheet" href="../css/admin.css?v=9">
 </head>
 <body class="login-page">
   <main class="login-shell">
@@ -25,6 +25,11 @@
           <span>Пароль</span>
           <input id="password" name="password" type="password" autocomplete="current-password" required>
         </label>
+        <label class="remember-device">
+          <input id="rememberDevice" type="checkbox" checked>
+          <span>Запомнить это устройство на 30 дней</span>
+        </label>
+        <p class="remember-device-note">Пароль не сохраняется. На устройстве остаётся только защищённый токен входа.</p>
         <button class="admin-btn admin-btn-primary" id="loginButton" type="submit">Войти</button>
         <div id="loginError" class="login-error" role="alert" aria-live="polite"></div>
       </form>
@@ -32,6 +37,6 @@
       <a class="back-site" href="/">← Вернуться на сайт</a>
     </section>
   </main>
-  <script src="../js/admin-login.js?v=7" defer></script>
+  <script src="../js/admin-login.js?v=9" defer></script>
 </body>
 </html>

@@ -41,6 +41,9 @@ button { color: inherit; }
 .admin-field textarea { resize: vertical; }
 .admin-field input:focus, .admin-field textarea:focus, .admin-field select:focus { border-color: rgba(66,214,232,.55); box-shadow: 0 0 0 3px rgba(66,214,232,.08); }
 .login-card form > .admin-btn { width: 100%; margin-top: 20px; min-height: 48px; }
+.remember-device { display: flex; align-items: center; gap: 10px; margin-top: 16px; color: #c0d3dc; font-size: 11px; font-weight: 700; cursor: pointer; }
+.remember-device input { width: 17px; height: 17px; margin: 0; accent-color: var(--accent); }
+.remember-device-note { margin: 7px 0 0 !important; color: #627f8d !important; font-size: 9px !important; line-height: 1.5 !important; }
 .login-error, .dialog-error { min-height: 20px; margin-top: 10px; color: #ff9696; font-size: 11px; }
 .back-site { display: inline-block; margin-top: 18px; color: #7792a0; font-size: 11px; }
 

@@ -112,3 +112,10 @@ V14 ADMIN NAVIGATION
 - A "К выбору городов" button is shown when a city/order scope is open.
 - The sidebar primary button returns to city selection instead of the public homepage.
 - The public homepage remains available only through the separate "Открыть сайт" button.
+
+
+ADMIN DEVICE MEMORY
+After a successful admin login, the device can be remembered for 30 days (enabled by default on the login screen).
+Going back to the public website does NOT log the admin out. The main-site button changes from "Войти" to "Админка" while the session is valid.
+The logout button in the admin panel invalidates the token and forgets the device.
+Remembered sessions are stored in the same SQLite database, so for persistence across Render restarts/deploys use AIRUS_DATA_DIR on a Persistent Disk.

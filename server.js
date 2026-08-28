@@ -19,6 +19,7 @@ const DB_FILE = process.env.AIRUS_DATA_DIR
   ? path.join(PERSIST_DIR, 'database.sqlite')
   : path.join(ROOT, 'database.sqlite');
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+const REMEMBERED_SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const CONSENT_VERSION = '2026-08-28';
 // Temporary admin credentials requested for the current deployment.
 // The password itself is not stored in source code; only its scrypt hash is kept here.
@@ -188,8 +189,8 @@ function cookieOptions(maxAgeSeconds) {
   ].filter(Boolean).join('; ');
 }
 
-function setSessionCookie(res, token) {
-  res.setHeader('Set-Cookie', `airus_admin_session=${encodeURIComponent(token)}; ${cookieOptions(Math.floor(SESSION_TTL_MS / 1000))}`);
+function setSessionCookie(res, token, ttlMs = SESSION_TTL_MS) {
+  res.setHeader('Set-Cookie', `airus_admin_session=${encodeURIComponent(token)}; ${cookieOptions(Math.floor(ttlMs / 1000))}`);
 }
 
 function clearSessionCookie(res) {
@@ -341,6 +342,7 @@ app.post('/api/orders', publicOrderLimiter, (req, res) => {
 app.post('/api/login', loginLimiter, (req, res) => {
   const login = cleanText(req.body?.login, 100);
   const password = String(req.body?.password || '');
+  const rememberDevice = req.body?.rememberDevice !== false;
   if (!verifyAdminPassword(login, password)) {
     return res.status(401).json({ ok: false, error: 'Неверный логин или пароль' });
   }
@@ -348,7 +350,8 @@ app.post('/api/login', loginLimiter, (req, res) => {
   const token = crypto.randomBytes(32).toString('base64url');
   const hash = sessionTokenHash(token);
   const now = Date.now();
-  const expiresAt = now + SESSION_TTL_MS;
+  const ttlMs = rememberDevice ? REMEMBERED_SESSION_TTL_MS : SESSION_TTL_MS;
+  const expiresAt = now + ttlMs;
 
   db.run('DELETE FROM admin_sessions WHERE expires_at <= ?', [now], () => {
     db.run(
@@ -356,8 +359,13 @@ app.post('/api/login', loginLimiter, (req, res) => {
       [hash, now, expiresAt],
       (err) => {
         if (err) return res.status(500).json({ ok: false, error: 'Не удалось создать сессию' });
-        setSessionCookie(res, token);
-        res.json({ ok: true, user: { login: adminAuth.login, role: 'admin' } });
+        setSessionCookie(res, token, ttlMs);
+        res.json({
+          ok: true,
+          remembered: rememberDevice,
+          expiresAt,
+          user: { login: adminAuth.login, role: 'admin' }
+        });
       }
     );
   });

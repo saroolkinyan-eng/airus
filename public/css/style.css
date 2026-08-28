@@ -104,6 +104,8 @@ button { border: 0; }
   transition: background .2s ease, border-color .2s ease, color .2s ease;
 }
 .admin-login-link:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.34); color: white; }
+.admin-login-link.is-authenticated { background: rgba(66,214,232,.12); border-color: rgba(66,214,232,.38); color: #c9fbff; }
+.admin-login-link.is-authenticated:hover { background: rgba(66,214,232,.2); border-color: rgba(66,214,232,.58); }
 .admin-login-link:focus-visible { outline: 3px solid rgba(66,214,232,.34); outline-offset: 2px; }
 
 .button {
