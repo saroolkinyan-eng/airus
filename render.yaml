@@ -10,7 +10,5 @@ services:
         value: production
       - key: TRUST_PROXY
         value: "1"
-      - key: ADMIN_LOGIN
-        sync: false
-      - key: ADMIN_PASSWORD
-        sync: false
+      - key: ADMIN_USE_ENV
+        value: "0"

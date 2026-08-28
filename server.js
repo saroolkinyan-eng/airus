@@ -20,6 +20,11 @@ const DB_FILE = process.env.AIRUS_DATA_DIR
   : path.join(ROOT, 'database.sqlite');
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
 const CONSENT_VERSION = '2026-08-28';
+// Temporary admin credentials requested for the current deployment.
+// The password itself is not stored in source code; only its scrypt hash is kept here.
+const DEFAULT_ADMIN_LOGIN = 'sarosaasa';
+const DEFAULT_ADMIN_SALT = '9a420aaf3c7ea7cd1a4df66f747acb2784d97fdfd782c65d';
+const DEFAULT_ADMIN_PASSWORD_HASH = '6475a8ce39e9bf800b967ad6f0a566da6d633bc2460413ec16c11a956e8584d0fe746774bc51b8fd9fc69b2e34acffb7a1aa349c7401482f0f6a2b1f7a45570d';
 const ALLOWED_CITIES = new Set(['Челябинск', 'Уфа']);
 const ALLOWED_STATUSES = new Set(['Новая', 'В работе', 'Ожидает оплаты', 'Выполнена']);
 
@@ -117,34 +122,27 @@ function safeWriteJson(file, data) {
   try { fs.chmodSync(file, 0o600); } catch (_) {}
 }
 
-let generatedAdminPassword = '';
 function loadAdminAuth() {
+  const useEnvironmentCredentials = process.env.ADMIN_USE_ENV === '1';
   const envLogin = String(process.env.ADMIN_LOGIN || '').trim();
   const envPassword = String(process.env.ADMIN_PASSWORD || '');
-  if (envPassword) {
+
+  // Environment credentials are opt-in so an old Render variable cannot silently
+  // override the temporary login requested for this deployment.
+  if (useEnvironmentCredentials && envLogin && envPassword) {
     return {
       mode: 'env',
-      login: envLogin || 'airus-admin',
+      login: envLogin,
       password: envPassword
     };
   }
 
-  if (fs.existsSync(AUTH_FILE)) {
-    try {
-      const stored = JSON.parse(fs.readFileSync(AUTH_FILE, 'utf8'));
-      if (stored.login && stored.salt && stored.passwordHash) {
-        return { mode: 'stored', ...stored };
-      }
-    } catch (err) {
-      console.error('Cannot read admin auth config:', err.message);
-    }
-  }
-
-  const login = envLogin || 'airus-admin';
-  generatedAdminPassword = crypto.randomBytes(15).toString('base64url');
-  const stored = createStoredAuth(login, generatedAdminPassword);
-  safeWriteJson(AUTH_FILE, stored);
-  return { mode: 'stored', ...stored };
+  return {
+    mode: 'preset',
+    login: DEFAULT_ADMIN_LOGIN,
+    salt: DEFAULT_ADMIN_SALT,
+    passwordHash: DEFAULT_ADMIN_PASSWORD_HASH
+  };
 }
 
 const adminAuth = loadAdminAuth();
@@ -474,12 +472,9 @@ app.listen(PORT, () => {
   console.log(`Database: ${DB_FILE}`);
   if (process.env.AIRUS_DATA_DIR) console.log(`Persistent data directory: ${PERSIST_DIR}`);
   console.log(`Admin login: ${adminAuth.login}`);
-  if (generatedAdminPassword) {
-    console.log('FIRST START: generated admin password:', generatedAdminPassword);
-    console.log('Save it now. It is stored only as a secure hash.');
-  } else if (adminAuth.mode === 'env') {
+  if (adminAuth.mode === 'env') {
     console.log('Admin password source: ADMIN_PASSWORD environment variable');
   } else {
-    console.log('Admin password: stored hash in data/admin-auth.json (use npm run admin:reset to replace it)');
+    console.log('Admin password source: temporary built-in scrypt hash');
   }
 });

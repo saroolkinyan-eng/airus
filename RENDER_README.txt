@@ -98,3 +98,11 @@ node scripts/import-legacy-assets.js
 Перед публичным запуском заполните реальные реквизиты оператора в:
 public/privacy.html
 public/consent.html
+
+
+ADMIN PANEL (v13)
+-----------------
+Public button: /admin/login.html
+Temporary login is configured server-side. The temporary password is intentionally not written to this repository.
+To switch to Render environment credentials later, set ADMIN_USE_ENV=1 and provide ADMIN_LOGIN + ADMIN_PASSWORD.
+Orders shown in the dashboard come from the same SQLite database used by /api/orders.
