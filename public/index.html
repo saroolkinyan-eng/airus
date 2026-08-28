@@ -3,247 +3,350 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>АйRus — промышленный альпинизм в Челябинске</title>
-  <meta name="description" content="Промышленный альпинизм в Челябинске: мойка окон, очистка крыш от снега, фасадные и монтажные работы.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <title>Коллективная мойка балконов в Челябинске и Уфе — АйRus</title>
+  <meta name="description" content="Коллективная мойка балконов и фасадного остекления методом промышленного альпинизма в Челябинске и Уфе. Стоимость от 150 ₽/м². Оставьте заявку на расчёт.">
+  <meta name="theme-color" content="#07131f">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://airus74.ru/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css?v=7">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="АйRus — коллективная мойка балконов на высоте">
+  <meta property="og:description" content="Челябинск и Уфа. Промышленный альпинизм, мойка балконов и фасадного остекления от 150 ₽/м².">
+  <meta property="og:url" content="https://airus74.ru/">
+  <meta property="og:image" content="https://airus74.ru/assets/hero-worker.svg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "АйRus",
+    "url": "https://airus74.ru/",
+    "telephone": "+79514350000",
+    "email": "manager@airus74.ru",
+    "description": "Промышленный альпинизм, коллективная мойка балконов и фасадного остекления.",
+    "areaServed": [
+      {"@type": "City", "name": "Челябинск"},
+      {"@type": "City", "name": "Уфа"}
+    ],
+    "makesOffer": {
+      "@type": "Offer",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "150",
+        "priceCurrency": "RUB",
+        "unitText": "м²"
+      },
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Коллективная мойка балконов"
+      }
+    }
+  }
+  </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">К содержанию</a>
+
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="АйRus">
+      <a class="brand" href="#top" aria-label="АйRus — на главную">
         <span class="brand-mark"><span>Ай</span>Rus</span>
+        <span class="brand-caption">промышленный альпинизм</span>
       </a>
 
-      <nav class="main-nav">
-        <a href="#top" class="is-active">Главная</a>
-        <a href="#services">Наши услуги</a>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="#how">Как это работает</a>
+        <a href="#prices">Цены</a>
+        <a href="#works">Работы</a>
         <a href="#news">Новости</a>
-        <a href="#contacts">Контакты</a>
+        <a href="#faq">FAQ</a>
       </nav>
 
-      <div class="header-side">
-        <a href="#services" class="header-link">Клининг</a>
-        <button class="icon-button open-order" type="button" aria-label="Открыть форму заявки">◌</button>
+      <div class="header-actions">
+        <a class="header-phone" href="tel:+79514350000">+7 951 435-00-00</a>
+        <button class="button button-small button-primary open-order" type="button">Рассчитать стоимость</button>
       </div>
     </div>
   </header>
 
-  <main id="top">
-    <section class="request-hero-section" id="services">
-      <div class="container request-hero-grid">
-        <div class="request-form-card glass-panel" id="order-request">
-          <div class="request-form-head">
-            <h2>Форма заявки</h2>
-            <div class="request-steps" aria-label="Шаги формы">
-              <button class="request-step is-active" type="button" data-step="1"><span></span> Город</button>
-              <button class="request-step" type="button" data-step="2"><span></span> ЖК</button>
-              <button class="request-step" type="button" data-step="3"><span></span> Данные</button>
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Челябинск · Уфа</div>
+          <h1>Коллективная мойка <span>балконов на высоте</span></h1>
+          <p class="hero-lead">Моем наружное остекление методом промышленного альпинизма. При коллективном заказе рассчитываем стоимость с учётом общего объёма работ по дому.</p>
+
+          <div class="hero-price-row">
+            <div class="price-chip">
+              <span>Стоимость</span>
+              <strong>от 150 ₽/м²</strong>
             </div>
+            <div class="hero-note">Точная цена зависит от площади, загрязнения и сложности доступа.</div>
           </div>
 
-          <form id="orderForm" class="wizard-form">
-            <input type="hidden" id="service" name="service" value="Коллективная мойка балконов">
+          <div class="hero-actions">
+            <button class="button button-primary open-order" type="button">Оставить заявку</button>
+            <a class="button button-ghost" href="tel:+79514350000">Позвонить</a>
+          </div>
 
-            <div class="wizard-panel is-active" data-panel="1">
-              <label class="field full dark-field">
-                <span>Выберите город</span>
+          <ul class="trust-list" aria-label="Преимущества">
+            <li><span>01</span> Один согласованный выезд по дому</li>
+            <li><span>02</span> Работы без строительных лесов</li>
+            <li><span>03</span> Расчёт до согласования даты</li>
+          </ul>
+
+          <div class="hero-visual" aria-hidden="true">
+            <img src="/assets/hero-worker.svg" alt="" width="800" height="760">
+          </div>
+        </div>
+
+        <aside class="order-card" id="order-request" aria-labelledby="orderTitle">
+          <div class="order-card-head">
+            <div>
+              <span class="card-kicker">Заявка на расчёт</span>
+              <h2 id="orderTitle">Найдите свой дом</h2>
+            </div>
+            <span class="secure-label">Без лишних звонков</span>
+          </div>
+
+          <div class="wizard-progress" aria-label="Шаги формы">
+            <button class="wizard-step is-active" type="button" data-step="1"><span>1</span><b>Город</b></button>
+            <button class="wizard-step" type="button" data-step="2"><span>2</span><b>Адрес</b></button>
+            <button class="wizard-step" type="button" data-step="3"><span>3</span><b>Контакт</b></button>
+          </div>
+
+          <form id="orderForm" class="wizard-form" novalidate>
+            <input type="hidden" id="service" value="Коллективная мойка балконов">
+            <label class="hp-field" aria-hidden="true">Ваш сайт<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
+
+            <section class="wizard-panel is-active" data-panel="1" aria-label="Шаг 1. Город">
+              <label class="field">
+                <span>Город</span>
                 <select id="city" name="city" required>
                   <option value="">Выберите город</option>
-                  <option value="Уфа">Уфа</option>
                   <option value="Челябинск">Челябинск</option>
+                  <option value="Уфа">Уфа</option>
                 </select>
               </label>
-              <div class="wizard-actions">
-                <button class="cta-button" type="button" data-next-step>Далее</button>
+              <p class="field-help">Список ЖК и домов изменится автоматически.</p>
+              <div class="wizard-actions end">
+                <button class="button button-primary" type="button" data-next-step>Далее</button>
               </div>
-            </div>
+            </section>
 
-            <div class="wizard-panel" data-panel="2">
-              <label class="field full dark-field">
-                <span>Выберите ЖК</span>
-                <select id="zhk" name="zhk" required>
+            <section class="wizard-panel" data-panel="2" aria-label="Шаг 2. Адрес">
+              <label class="field">
+                <span>Жилой комплекс</span>
+                <select id="zhk" name="zhk" required disabled>
                   <option value="">Сначала выберите город</option>
                 </select>
               </label>
 
-              <label class="field full dark-field">
-                <span>Выберите улицу / адрес</span>
-                <select id="street" name="street">
+              <label class="field" id="addressSelectWrap">
+                <span>Дом / адрес</span>
+                <select id="address" name="address" disabled>
                   <option value="">Сначала выберите ЖК</option>
                 </select>
               </label>
 
-              <div class="wizard-actions between">
-                <button class="ghost-button" type="button" data-prev-step>Назад</button>
-                <button class="cta-button" type="button" data-next-step>Далее</button>
+              <div class="manual-address-fields" id="manualAddressWrap" hidden>
+                <label class="field" id="customZhkWrap">
+                  <span>Название ЖК <small>необязательно</small></span>
+                  <input id="customZhk" name="customZhk" maxlength="120" placeholder="Например, ЖК Северный">
+                </label>
+                <label class="field">
+                  <span>Адрес дома</span>
+                  <input id="manualAddress" name="manualAddress" maxlength="180" placeholder="Улица и номер дома" autocomplete="street-address">
+                </label>
               </div>
-            </div>
 
-            <div class="wizard-panel" data-panel="3">
-              <div class="form-grid compact">
-                <label class="field dark-field">
+              <p class="field-help">Не нашли дом? Выберите «Моего адреса нет» — адрес можно ввести вручную.</p>
+              <div class="wizard-actions between">
+                <button class="button button-ghost" type="button" data-prev-step>Назад</button>
+                <button class="button button-primary" type="button" data-next-step>Далее</button>
+              </div>
+            </section>
+
+            <section class="wizard-panel" data-panel="3" aria-label="Шаг 3. Контактные данные">
+              <div class="form-grid">
+                <label class="field full">
                   <span>Имя</span>
-                  <input id="name" name="name" placeholder="Ваше имя" required>
+                  <input id="name" name="name" maxlength="80" placeholder="Как к вам обращаться" autocomplete="name" required>
                 </label>
-
-                <label class="field dark-field">
+                <label class="field full">
                   <span>Телефон</span>
-                  <input id="phone" name="phone" placeholder="+7 900 000-00-00" required>
+                  <input id="phone" name="phone" type="tel" inputmode="tel" maxlength="22" placeholder="+7 (900) 000-00-00" autocomplete="tel" required>
                 </label>
-
-                <label class="field dark-field">
-                  <span>Дом</span>
-                  <input id="house" name="house" placeholder="Дом">
+                <label class="field">
+                  <span>Подъезд <small>необязательно</small></span>
+                  <input id="entrance" name="entrance" maxlength="30" inputmode="numeric" placeholder="1">
                 </label>
-
-                <label class="field dark-field">
-                  <span>Подъезд</span>
-                  <input id="entrance" name="entrance" placeholder="Подъезд">
+                <label class="field">
+                  <span>Квартира <small>необязательно</small></span>
+                  <input id="flat" name="flat" maxlength="30" inputmode="numeric" placeholder="42">
                 </label>
-
-                <label class="field dark-field">
-                  <span>Квартира</span>
-                  <input id="flat" name="flat" placeholder="Квартира">
+                <label class="field full">
+                  <span>Этаж <small>необязательно</small></span>
+                  <input id="floor" name="floor" maxlength="30" inputmode="numeric" placeholder="12">
                 </label>
-
-                <label class="field dark-field">
-                  <span>Этаж</span>
-                  <input id="floor" name="floor" placeholder="Этаж">
-                </label>
-
-                <label class="field full dark-field">
-                  <span>Комментарий</span>
-                  <textarea id="comment" name="comment" rows="4" placeholder="Напишите удобное время, объём работ или особенности объекта"></textarea>
+                <label class="field full">
+                  <span>Комментарий <small>необязательно</small></span>
+                  <textarea id="comment" name="comment" maxlength="1200" rows="3" placeholder="Например: угловой балкон, сильное загрязнение"></textarea>
                 </label>
               </div>
+
+              <label class="consent-row">
+                <input id="consent" name="consent" type="checkbox" required>
+                <span>Я даю <a href="/consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> для обработки заявки. <a href="/privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>.</span>
+              </label>
 
               <div class="wizard-actions between">
-                <button class="ghost-button" type="button" data-prev-step>Назад</button>
-                <button class="cta-button submit-button" type="submit">Отправить заявку</button>
+                <button class="button button-ghost" type="button" data-prev-step>Назад</button>
+                <button class="button button-primary submit-button" id="submitOrder" type="submit">Отправить заявку</button>
               </div>
-              <div id="formAlert" class="alert"></div>
-            </div>
+            </section>
+
+            <div id="formAlert" class="form-alert" role="status" aria-live="polite"></div>
           </form>
+
+          <div class="form-success" id="formSuccess" hidden>
+            <div class="success-icon">✓</div>
+            <h3>Заявка принята</h3>
+            <p id="successText">Свяжемся с вами для уточнения расчёта и даты.</p>
+            <button class="button button-ghost" id="newOrderButton" type="button">Отправить ещё одну</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-light" id="how">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Понятный процесс</span>
+          <h2>Как проходит коллективная мойка</h2>
+          <p>Вы оставляете адрес и контакт. Мы объединяем заявки по дому, рассчитываем объём и согласовываем выезд.</p>
         </div>
 
-        <div class="request-copy">
-          <p class="eyebrow">Клининг / Мойка балконов</p>
-          <h1>Коллективная мойка <span>балконов</span></h1>
-          <p class="request-lead">Мы делаем мойку балконов методом промышленного альпинизма доступнее. Работы по очистке от атмосферных загрязнений в Челябинске и Уфе — от 150 рублей/м².</p>
-          <p class="request-text">Цена формируется из площади остекления, степени загрязнения и сложности работ. Для домов, где заявки подают сразу несколько жильцов, помогаем организовать коллективную мойку и согласовать удобный выезд.</p>
-          <div class="request-badges">
-            <span class="request-badge">Заявки сразу попадают в админку</span>
-            <span class="request-badge">2 города: Уфа и Челябинск</span>
-            <span class="request-badge">Подходит для ЖК и частных адресов</span>
-          </div>
+        <div class="steps-grid">
+          <article class="process-card">
+            <span class="process-number">01</span>
+            <h3>Заявка</h3>
+            <p>Выберите город, ЖК и дом. Если адреса нет в списке — введите его вручную.</p>
+          </article>
+          <article class="process-card">
+            <span class="process-number">02</span>
+            <h3>Группа по дому</h3>
+            <p>Заявки одного дома собираются вместе, чтобы рассчитать общий объём работ.</p>
+          </article>
+          <article class="process-card">
+            <span class="process-number">03</span>
+            <h3>Расчёт и дата</h3>
+            <p>Уточняем площадь, доступ и загрязнение, после чего согласовываем стоимость и день работ.</p>
+          </article>
+          <article class="process-card">
+            <span class="process-number">04</span>
+            <h3>Мойка</h3>
+            <p>Промышленные альпинисты выполняют наружную мойку остекления без установки лесов.</p>
+          </article>
         </div>
       </div>
     </section>
 
-<section class="section work-types-section" id="work-types">
-      <div class="container">
-        <div class="section-head left work-types-head">
-          <h2>Виды работ</h2>
+    <section class="section value-section">
+      <div class="container value-grid">
+        <div>
+          <span class="section-kicker">Почему коллективно</span>
+          <h2>Один выезд — несколько квартир</h2>
+          <p class="section-lead">Когда в одном доме есть несколько заявок, маршрут и подготовка работ объединяются. Итоговую цену называем после расчёта конкретного объёма.</p>
         </div>
-
-        <div class="work-table-shell glass-panel">
-          <div class="work-table-wrap">
-            <table class="work-table">
-              <thead>
-                <tr>
-                  <th>Наименование</th>
-                  <th>Описание</th>
-                  <th>Стоимость</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Гидроструйная очистка фасадов и стен</td>
-                  <td>Очистка поверхности струёй воды под высоким давлением.</td>
-                  <td>От 35 ₽/м²</td>
-                </tr>
-                <tr>
-                  <td>Клининг фасада от стандартных (атмосферных) загрязнений</td>
-                  <td>Очистка фасадов от атмосферных загрязнений.</td>
-                  <td>От 35 ₽/м²</td>
-                </tr>
-                <tr>
-                  <td>Клининг фасада от строительных, химических загрязнений</td>
-                  <td>Очистка фасадов от атмосферных и иных загрязнений.</td>
-                  <td>От 60 ₽/м²</td>
-                </tr>
-                <tr>
-                  <td>Мойка балконов</td>
-                  <td>Осуществляем <span class="accent-inline">коллективную мойку</span> балконов.</td>
-                  <td>От 150 ₽/м²</td>
-                </tr>
-                <tr>
-                  <td>Очистка водосточных воронок</td>
-                  <td>Очистка водосточных воронок.</td>
-                  <td>От 475 ₽/шт.</td>
-                </tr>
-                <tr>
-                  <td>Очистка желобов от листвы и ила</td>
-                  <td>Очистка желобов от листвы и ила.</td>
-                  <td>От 200 ₽/м.п.</td>
-                </tr>
-                <tr>
-                  <td>Очистка фасада от высолов (солевых отложений)</td>
-                  <td>Очистка фасада от высолов (солевых отложений).</td>
-                  <td>От 90 ₽/м²</td>
-                </tr>
-                <tr>
-                  <td>Прочистка водосточной системы методом разборки и сборки</td>
-                  <td>Полная механическая прочистка с разборкой и последующей сборкой элементов.</td>
-                  <td>От 625 ₽/м.п.</td>
-                </tr>
-                <tr>
-                  <td>Прочистка водосточной трубы тросом и другими приспособлениями (без разбора)</td>
-                  <td>Прочистка засоров без разбора водосточной трубы.</td>
-                  <td>От 290 ₽/м.п.</td>
-                </tr>
-                <tr>
-                  <td>Удаление грибка и плесени</td>
-                  <td>Удаление грибка и плесени.</td>
-                  <td>От 120 ₽/м²</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="value-cards">
+          <article><strong>По дому</strong><span>Заявки группируются по одному адресу и подъезду.</span></article>
+          <article><strong>До выезда</strong><span>Сначала согласуем расчёт и условия, затем назначаем дату.</span></article>
+          <article><strong>Без лесов</strong><span>Доступ к наружному остеклению выполняется методом промышленного альпинизма.</span></article>
         </div>
       </div>
     </section>
 
-    <section class="clients-section section" id="clients">
+    <section class="section section-light" id="prices">
       <div class="container">
-        <div class="section-head center">
-          <h2>Наши клиенты</h2>
+        <div class="section-heading split-heading">
+          <div>
+            <span class="section-kicker">Стоимость</span>
+            <h2>Мойка балконов — от 150 ₽/м²</h2>
+          </div>
+          <p>Цена зависит от площади остекления, типа загрязнения, высоты и сложности доступа. Финальная стоимость фиксируется после расчёта.</p>
         </div>
 
-        <div class="client-showcase" id="clientShowcase">
-          <div class="client-ring"></div>
-          <div class="client-visual client-visual-1" id="clientVisual"></div>
-          <div class="client-card" id="clientCard">
-            <h3 id="clientTitle">ЖК «Территория»</h3>
-            <div class="client-subtitle" id="clientSubtitle">Мойка окон и балконов</div>
-            <p id="clientText">Жители заказывали послестроительную мойку окон и балконов. За короткий срок выполнили большой объём заявок по одному жилому комплексу.</p>
+        <div class="featured-price-card">
+          <div>
+            <span class="price-tag">Основная услуга</span>
+            <h3>Коллективная мойка балконов</h3>
+            <p>Наружная мойка остекления промышленными альпинистами. Подходит для квартир в высотных ЖК.</p>
           </div>
-          <div class="client-controls">
-            <button type="button" class="slider-btn" id="clientPrev" aria-label="Предыдущий кейс">‹</button>
-            <div class="slider-line"><span id="clientProgress"></span></div>
-            <button type="button" class="slider-btn" id="clientNext" aria-label="Следующий кейс">›</button>
+          <div class="featured-price">
+            <small>от</small>
+            <strong>150 ₽</strong>
+            <span>за м²</span>
           </div>
+          <button class="button button-primary open-order" type="button">Получить расчёт</button>
+        </div>
+
+        <details class="services-details">
+          <summary>Другие высотные и фасадные работы <span>Показать цены</span></summary>
+          <div class="service-price-grid">
+            <article><h3>Гидроструйная очистка фасадов и стен</h3><p>Очистка поверхности струёй воды под высоким давлением.</p><strong>от 35 ₽/м²</strong></article>
+            <article><h3>Клининг фасада от атмосферных загрязнений</h3><p>Сезонная очистка наружных поверхностей.</p><strong>от 35 ₽/м²</strong></article>
+            <article><h3>Очистка от строительных и химических загрязнений</h3><p>Работа со сложными локальными загрязнениями фасада.</p><strong>от 60 ₽/м²</strong></article>
+            <article><h3>Очистка водосточных воронок</h3><p>Очистка и восстановление свободного стока воды.</p><strong>от 475 ₽/шт.</strong></article>
+            <article><h3>Очистка желобов от листвы и ила</h3><p>Механическая очистка водосточных желобов.</p><strong>от 200 ₽/м.п.</strong></article>
+            <article><h3>Удаление высолов</h3><p>Очистка фасадов от солевых отложений.</p><strong>от 90 ₽/м²</strong></article>
+            <article><h3>Прочистка водостока с разборкой</h3><p>Разборка, механическая очистка и последующая сборка.</p><strong>от 625 ₽/м.п.</strong></article>
+            <article><h3>Прочистка трубы без разбора</h3><p>Удаление засора тросом и другими приспособлениями.</p><strong>от 290 ₽/м.п.</strong></article>
+            <article><h3>Удаление грибка и плесени</h3><p>Локальная обработка поражённых наружных поверхностей.</p><strong>от 120 ₽/м²</strong></article>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section works-section" id="works">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-kicker">Направления работ</span>
+          <h2>Что выполняем на высоте</h2>
+          <p>Мойка наружного остекления, фасадные, кровельные и монтажные работы методом промышленного альпинизма.</p>
+        </div>
+
+        <div class="work-gallery">
+          <article class="work-card work-card-large">
+            <img src="/assets/service-windows.svg" alt="Иллюстрация мойки окон и балконного остекления" width="600" height="420" loading="lazy">
+            <div><span>Клининг</span><h3>Мойка окон и балконов</h3><p>Наружное остекление квартир и высотных зданий.</p></div>
+          </article>
+          <article class="work-card">
+            <img src="/assets/service-facade.svg" alt="Иллюстрация фасадных работ" width="600" height="420" loading="lazy">
+            <div><span>Фасад</span><h3>Очистка фасадов</h3></div>
+          </article>
+          <article class="work-card">
+            <img src="/assets/service-roof.svg" alt="Иллюстрация очистки крыш" width="600" height="420" loading="lazy">
+            <div><span>Кровля</span><h3>Очистка крыш</h3></div>
+          </article>
+          <article class="work-card">
+            <img src="/assets/service-mount.svg" alt="Иллюстрация монтажных высотных работ" width="600" height="420" loading="lazy">
+            <div><span>Монтаж</span><h3>Высотные монтажные работы</h3></div>
+          </article>
         </div>
       </div>
     </section>
 
     <section class="section news-section" id="news">
       <div class="container">
-        <div class="section-head center">
-          <h2>Новости</h2>
+        <div class="section-heading news-heading">
+          <span class="section-kicker">Новости</span>
+          <h2>Новости АйRus</h2>
+          <p>Актуальные направления работ, сезонные заявки и обслуживание высотных объектов.</p>
         </div>
 
         <div class="news-grid">
@@ -251,69 +354,108 @@
             <span class="news-date">19 марта 2026 • 12:02</span>
             <h3>Весенний набор заявок на мойку балконов</h3>
             <p>Открыт приём заявок на сезонную мойку окон, лоджий и фасадного остекления для жилых комплексов и управляющих компаний.</p>
-            <a href="#contacts" class="news-link">Подробнее →</a>
+            <a href="#contacts" class="news-link">Подробнее <span aria-hidden="true">→</span></a>
           </article>
 
           <article class="news-card">
             <span class="news-date">12 марта 2026 • 12:49</span>
             <h3>Оформление фасада и монтаж подсветки</h3>
             <p>Берём в работу монтаж наружных конструкций, декоративной подсветки и обслуживание креплений на высотных участках зданий.</p>
-            <a href="#contacts" class="news-link">Подробнее →</a>
+            <a href="#contacts" class="news-link">Подробнее <span aria-hidden="true">→</span></a>
           </article>
 
           <article class="news-card">
             <span class="news-date">10 февраля 2026 • 10:27</span>
             <h3>Межпанельные швы и фасадное обслуживание</h3>
             <p>Помогаем устранить протечки, провести герметизацию швов и выполнить локальный ремонт фасада без долгих согласований.</p>
-            <a href="#contacts" class="news-link">Подробнее →</a>
+            <a href="#contacts" class="news-link">Подробнее <span aria-hidden="true">→</span></a>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section contacts-section" id="contacts">
-      <div class="container contacts-grid">
-        <div class="contacts-brand">
-          <div class="brand-big"><span>Ай</span>Rus</div>
-          <ul class="contact-list">
-            <li>📍 г. Челябинск</li>
-            <li>✉ manager@airus74.ru</li>
-            <li>📞 +7 951 435-00-00</li>
-          </ul>
-          <div class="footer-nav-links">
-            <a href="#top">Главная</a>
-            <a href="#services">Наши услуги</a>
-          </div>
+    <section class="section section-light" id="faq">
+      <div class="container faq-layout">
+        <div class="section-heading sticky-heading">
+          <span class="section-kicker">FAQ</span>
+          <h2>Перед заявкой</h2>
+          <p>Короткие ответы на вопросы, которые чаще всего возникают до расчёта.</p>
         </div>
 
-        <div class="contacts-main">
-          <div class="section-head left">
-            <h2>Наши контакты</h2>
-          </div>
-          <div class="contacts-panel glass-panel">
-            <p>Заявки уже подключены к рабочей админ-панели. После отправки новая заявка сразу попадёт в систему.</p>
-            <div class="contact-pill-list">
-              <span class="contact-pill">Админка: /admin/login.html</span>
-              <span class="contact-pill">Логин: sarosaasa</span>
-              <span class="contact-pill">Пароль: rozamimoza123</span>
-            </div>
-            <div class="contacts-actions">
-              <button class="cta-button open-order" type="button">Оставить заявку</button>
-              <a class="ghost-button" href="admin/login.html">Открыть админку</a>
-            </div>
-          </div>
+        <div class="faq-list">
+          <details open>
+            <summary>Нужно ли быть дома во время мойки?</summary>
+            <p>Это зависит от доступа к остеклению и особенностей объекта. Уточним необходимость присутствия при согласовании конкретной заявки.</p>
+          </details>
+          <details>
+            <summary>Как рассчитывается площадь и цена?</summary>
+            <p>Учитываются площадь наружного остекления, степень загрязнения, высота и сложность доступа. Базовая стоимость коллективной мойки начинается от 150 ₽/м².</p>
+          </details>
+          <details>
+            <summary>Можно заказать мойку только для одной квартиры?</summary>
+            <p>Заявку оставить можно. Если по вашему дому уже собирается группа, мы объединим обращения. Индивидуальную возможность и стоимость уточним отдельно.</p>
+          </details>
+          <details>
+            <summary>Что делать, если моего ЖК или дома нет в списке?</summary>
+            <p>Выберите пункт «Моего ЖК нет / частный адрес» или «Моего адреса нет» и введите адрес вручную.</p>
+          </details>
+          <details>
+            <summary>Когда станет известна дата работ?</summary>
+            <p>После проверки адреса, объёма и формирования группы по дому. До выезда согласуем с вами расчёт и предполагаемую дату.</p>
+          </details>
+          <details>
+            <summary>Какие ещё высотные работы выполняете?</summary>
+            <p>Фасадный клининг, очистку водостоков и крыш, удаление локальных загрязнений и отдельные монтажные работы. Перечень и ориентировочные цены есть выше.</p>
+          </details>
         </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contacts">
+      <div class="container contact-panel">
+        <div>
+          <span class="section-kicker">Челябинск · Уфа</span>
+          <h2>Рассчитаем работу по вашему адресу</h2>
+          <p>Оставьте заявку через форму или свяжитесь напрямую.</p>
+        </div>
+        <div class="contact-links">
+          <a href="tel:+79514350000"><small>Телефон</small><strong>+7 951 435-00-00</strong></a>
+          <a href="mailto:manager@airus74.ru"><small>E-mail</small><strong>manager@airus74.ru</strong></a>
+        </div>
+        <button class="button button-primary open-order" type="button">Оставить заявку</button>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-row">
-      <span>Все права защищены © АйRus, 2026</span>
-      <span>Промышленный альпинизм и клининг</span>
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span class="brand-mark"><span>Ай</span>Rus</span>
+        <p>Промышленный альпинизм и клининг в Челябинске и Уфе.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#how">Как это работает</a>
+        <a href="#prices">Цены</a>
+        <a href="#news">Новости</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contacts">Контакты</a>
+      </div>
+      <div class="footer-legal">
+        <a href="/privacy.html">Политика конфиденциальности</a>
+        <a href="/consent.html">Согласие на обработку персональных данных</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© АйRus, 2026</span>
+      <span>Информация о ценах не является публичной офертой. Итоговая стоимость определяется после расчёта.</span>
     </div>
   </footer>
 
-  <script src="js/site.js?v=6"></script>
+  <div class="mobile-action-bar" aria-label="Быстрые действия">
+    <a href="tel:+79514350000">Позвонить</a>
+    <button class="open-order" type="button">Оставить заявку</button>
+  </div>
+
+  <script src="/js/site.js?v=7" defer></script>
 </body>
 </html>

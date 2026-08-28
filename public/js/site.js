@@ -1,331 +1,338 @@
-const form = document.getElementById('orderForm');
-const alertBox = document.getElementById('formAlert');
-const openButtons = document.querySelectorAll('.open-order');
-const citySelect = document.getElementById('city');
-const zhkSelect = document.getElementById('zhk');
-const streetSelect = document.getElementById('street');
-const steps = [...document.querySelectorAll('.request-step')];
-const panels = [...document.querySelectorAll('.wizard-panel')];
-const nextButtons = document.querySelectorAll('[data-next-step]');
-const prevButtons = document.querySelectorAll('[data-prev-step]');
-
-const clientCases = [
-  {
-    title: 'ЖК «Территория»',
-    subtitle: 'Мойка окон и балконов',
-    text: 'Жители заказывали послестроительную мойку окон и балконов. За короткий срок выполнили большой объём заявок по одному жилому комплексу.',
-    visualClass: 'client-visual-1'
-  },
-  {
-    title: 'Бизнес-центр «Панорама»',
-    subtitle: 'Фасадное обслуживание',
-    text: 'Провели сезонную мойку фасадного остекления и обслуживание наружных участков здания с безопасной организацией работ для арендаторов.',
-    visualClass: 'client-visual-2'
-  },
-  {
-    title: 'ЖК «Новый берег»',
-    subtitle: 'Очистка крыши от снега',
-    text: 'Организовали срочную очистку кровли и опасных зон от снега и наледи. Заявки поступали через сайт и сразу распределялись через админку.',
-    visualClass: 'client-visual-3'
-  }
-];
-
-const dataset = {
-  'Уфа': {
-    'Квартал Энтузиастов': [
-      'Лесотехникума 1',
-      'Лесотехникума 21',
-      'Лесотехникума, Туфана 1',
-      'Рудольфа Нуреева 1',
-      'Энтузиастов 124',
-      'Энтузиастов 14',
-      'Энтузиастов 16'
-    ]
-  },
-  'Челябинск': {
-    'AcademRiverside': ['Университетская Набережная 97', 'Университетская Набережная 99'],
-    'EvoPark': ['Телевизионная 6В', 'Орджоникидзе 64'],
-    'Без ЖК': ['Частный адрес'],
-    'Вместе': ['Дзержинского 93Б'],
-    'Конфетти': ['Бейвеля 22', 'Бейвеля 24'],
-    'Король Плаза': ['Братьев Кашириных 158'],
-    'Манхэттен': [
-      'Героя России Александра Яковлева 12',
-      'Героя России Александра Яковлева 3',
-      'Героя России Александра Яковлева 9',
-      'Набережная Героя России Сергея Кислова 23',
-      'Набережная Героя России Сергея Кислова 27'
-    ],
-    'Ньютон': ['Татищева 256', 'Академика Макеева 17'],
-    'Олимп': ['Братьев Кашириных 131Б'],
-    'Парковый': ['Краснопольский проспект 3', 'Краснопольский проспект 5'],
-    'Парковый 2': ['Петра Сумина 26'],
-    'Парковый Premium': ['Ласковая 6'],
-    'Парус': ['Братьев Кашириных 8'],
-    'Подсолнухи': ['Салавата Юлаева 29'],
-    'Притяжение': ['Генерала Мартынова 14'],
-    'Самоцвет': ['Петра Столыпина 15'],
-    'Территория': ['1-я Окружная 5', '1-я Окружная 7'],
-    'Шишкин': ['Шершневская 81'],
-    'Ярославский': ['Ярославская 11']
-  }
-};
-
-const clientTitle = document.getElementById('clientTitle');
-const clientSubtitle = document.getElementById('clientSubtitle');
-const clientText = document.getElementById('clientText');
-const clientVisual = document.getElementById('clientVisual');
-const clientProgress = document.getElementById('clientProgress');
-const clientPrev = document.getElementById('clientPrev');
-const clientNext = document.getElementById('clientNext');
-
-let clientIndex = 0;
-let currentStep = 1;
-
-const addressData = {
-  'Челябинск': {
-    'Манхэттен': {
-      'Героя России Александра Яковлева 3': {
-        '1': ['14', '45', '64', '113', '154']
-      },
-      'Героя России Александра Яковлева 12': {
-        '1': ['12','24','58']
-      }
+(() => {
+  const dataset = {
+    'Уфа': {
+      'Квартал Энтузиастов': [
+        'Лесотехникума 1',
+        'Лесотехникума 21',
+        'Лесотехникума, Туфана 1',
+        'Рудольфа Нуреева 1',
+        'Энтузиастов 124',
+        'Энтузиастов 14',
+        'Энтузиастов 16'
+      ]
     },
-    'Территория': {
-      '1-я Окружная 5': {'1':['11','24','52']}
-    },
-    'Шишкин': {
-      'Шишкинская 1': {'1':['3','15']}
+    'Челябинск': {
+      'AcademRiverside': ['Университетская Набережная 97', 'Университетская Набережная 99'],
+      'EvoPark': ['Телевизионная 6В', 'Орджоникидзе 64'],
+      'Вместе': ['Дзержинского 93Б'],
+      'Конфетти': ['Бейвеля 22', 'Бейвеля 24'],
+      'Король Плаза': ['Братьев Кашириных 158'],
+      'Манхэттен': [
+        'Героя России Александра Яковлева 12',
+        'Героя России Александра Яковлева 3',
+        'Героя России Александра Яковлева 9',
+        'Набережная Героя России Сергея Кислова 23',
+        'Набережная Героя России Сергея Кислова 27'
+      ],
+      'Ньютон': ['Татищева 256', 'Академика Макеева 17'],
+      'Олимп': ['Братьев Кашириных 131Б'],
+      'Парковый': ['Краснопольский проспект 3', 'Краснопольский проспект 5'],
+      'Парковый 2': ['Петра Сумина 26'],
+      'Парковый Premium': ['Ласковая 6'],
+      'Парус': ['Братьев Кашириных 8'],
+      'Подсолнухи': ['Салавата Юлаева 29'],
+      'Притяжение': ['Генерала Мартынова 14'],
+      'Самоцвет': ['Петра Столыпина 15'],
+      'Территория': ['1-я Окружная 5', '1-я Окружная 7'],
+      'Шишкин': ['Шершневская 81'],
+      'Ярославский': ['Ярославская 11']
     }
-  },
-  'Уфа': {
-    'Квартал Энтузиастов': {
-      'Энтузиастов 14': {'1':['12','34','56']},
-      'Лесотехникума 21': {'1':['21','45']}
-    }
-  }
-};
-
-function fillHouseOptions() {
-  const house = document.getElementById('house');
-  if (!house) return;
-  const city = citySelect.value;
-  const zhk = zhkSelect.value;
-  const streets = addressData[city]?.[zhk] ? Object.keys(addressData[city][zhk]) : [];
-  fillSelect(streetSelect, streets, zhk ? 'Выберите улицу / адрес' : 'Сначала выберите ЖК');
-}
-
-
-function setAlert(type, text) {
-  if (!alertBox) return;
-  alertBox.className = 'alert ' + type;
-  alertBox.textContent = text;
-}
-
-function scrollToForm() {
-  const block = document.getElementById('order-request');
-  if (!block) return;
-  block.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setTimeout(() => citySelect?.focus(), 300);
-}
-
-openButtons.forEach((btn) => {
-  btn.addEventListener('click', () => scrollToForm());
-});
-
-function fillSelect(select, items, placeholder) {
-  if (!select) return;
-  select.innerHTML = '';
-  const empty = document.createElement('option');
-  empty.value = '';
-  empty.textContent = placeholder;
-  select.appendChild(empty);
-  items.forEach((item) => {
-    const option = document.createElement('option');
-    option.value = item;
-    option.textContent = item;
-    select.appendChild(option);
-  });
-}
-
-function updateZhkOptions() {
-  const city = citySelect?.value || '';
-  const zhks = city && dataset[city] ? Object.keys(dataset[city]) : [];
-  fillSelect(zhkSelect, zhks, city ? 'Выберите ЖК' : 'Сначала выберите город');
-  fillSelect(streetSelect, [], 'Сначала выберите ЖК');
-}
-
-function updateStreetOptions() {
-  const city = citySelect?.value || '';
-  const zhk = zhkSelect?.value || '';
-  const streets = city && zhk && dataset[city] && dataset[city][zhk] ? dataset[city][zhk] : [];
-  fillSelect(streetSelect, streets, zhk ? 'Выберите улицу / адрес' : 'Сначала выберите ЖК');
-}
-
-function canMoveTo(step) {
-  if (step === 2) {
-    if (!citySelect?.value) {
-      setAlert('error', 'Сначала выберите город.');
-      citySelect?.focus();
-      return false;
-    }
-  }
-  if (step === 3) {
-    if (!citySelect?.value) {
-      setAlert('error', 'Сначала выберите город.');
-      currentStep = 1;
-      renderSteps();
-      citySelect?.focus();
-      return false;
-    }
-    if (!zhkSelect?.value) {
-      setAlert('error', 'Выберите ЖК.');
-      zhkSelect?.focus();
-      return false;
-    }
-  }
-  setAlert('', '');
-  return true;
-}
-
-function renderSteps() {
-  steps.forEach((stepBtn) => {
-    const step = Number(stepBtn.dataset.step);
-    stepBtn.classList.toggle('is-active', step === currentStep);
-    stepBtn.classList.toggle('is-complete', step < currentStep);
-  });
-  panels.forEach((panel) => {
-    panel.classList.toggle('is-active', Number(panel.dataset.panel) === currentStep);
-  });
-}
-
-steps.forEach((stepBtn) => {
-  stepBtn.addEventListener('click', () => {
-    const target = Number(stepBtn.dataset.step);
-    if (target <= currentStep) {
-      currentStep = target;
-      renderSteps();
-      return;
-    }
-    if (canMoveTo(target)) {
-      currentStep = target;
-      renderSteps();
-    }
-  });
-});
-
-nextButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const next = Math.min(currentStep + 1, 3);
-    if (canMoveTo(next)) {
-      currentStep = next;
-      renderSteps();
-    }
-  });
-});
-
-prevButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    currentStep = Math.max(currentStep - 1, 1);
-    renderSteps();
-  });
-});
-
-citySelect?.addEventListener('change', () => {
-  updateZhkOptions();
-  setAlert('', '');
-});
-zhkSelect?.addEventListener('change', () => {
-  updateStreetOptions();
-  fillHouseOptions();
-  setAlert('', '');
-});
-
-function renderClient(index) {
-  const item = clientCases[index];
-  if (!item || !clientTitle || !clientSubtitle || !clientText || !clientVisual || !clientProgress) return;
-  clientTitle.textContent = item.title;
-  clientSubtitle.textContent = item.subtitle;
-  clientText.textContent = item.text;
-  clientVisual.className = `client-visual ${item.visualClass}`;
-  clientProgress.style.width = `${((index + 1) / clientCases.length) * 100}%`;
-}
-
-clientPrev?.addEventListener('click', () => {
-  clientIndex = (clientIndex - 1 + clientCases.length) % clientCases.length;
-  renderClient(clientIndex);
-});
-
-clientNext?.addEventListener('click', () => {
-  clientIndex = (clientIndex + 1) % clientCases.length;
-  renderClient(clientIndex);
-});
-
-form?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const payload = {
-    service: document.getElementById('service')?.value || 'Коллективная мойка балконов',
-    city: document.getElementById('city')?.value || '',
-    zhk: document.getElementById('zhk')?.value || '',
-    street: document.getElementById('street')?.value || '',
-    name: document.getElementById('name')?.value.trim() || '',
-    phone: document.getElementById('phone')?.value.trim() || '',
-    house: document.getElementById('house')?.value.trim() || '',
-    entrance: document.getElementById('entrance')?.value.trim() || '',
-    flat: document.getElementById('flat')?.value.trim() || '',
-    floor: document.getElementById('floor')?.value.trim() || '',
-    comment: document.getElementById('comment')?.value.trim() || ''
   };
 
-  if (!payload.city) {
-    currentStep = 1;
-    renderSteps();
-    setAlert('error', 'Выберите город.');
-    citySelect?.focus();
-    return;
+  const OTHER_ZHK = '__other_zhk__';
+  const OTHER_ADDRESS = '__other_address__';
+  const form = document.getElementById('orderForm');
+  const formSuccess = document.getElementById('formSuccess');
+  const successText = document.getElementById('successText');
+  const newOrderButton = document.getElementById('newOrderButton');
+  const alertBox = document.getElementById('formAlert');
+  const submitButton = document.getElementById('submitOrder');
+  const citySelect = document.getElementById('city');
+  const zhkSelect = document.getElementById('zhk');
+  const addressSelect = document.getElementById('address');
+  const addressSelectWrap = document.getElementById('addressSelectWrap');
+  const manualAddressWrap = document.getElementById('manualAddressWrap');
+  const customZhkWrap = document.getElementById('customZhkWrap');
+  const customZhkInput = document.getElementById('customZhk');
+  const manualAddressInput = document.getElementById('manualAddress');
+  const phoneInput = document.getElementById('phone');
+  const steps = Array.from(document.querySelectorAll('.wizard-step'));
+  const panels = Array.from(document.querySelectorAll('.wizard-panel'));
+  const openButtons = document.querySelectorAll('.open-order');
+  let currentStep = 1;
+
+  function setAlert(type = '', text = '') {
+    if (!alertBox) return;
+    alertBox.className = `form-alert${type ? ` ${type}` : ''}`;
+    alertBox.textContent = text;
   }
 
-  if (!payload.zhk) {
-    currentStep = 2;
-    renderSteps();
-    setAlert('error', 'Выберите ЖК.');
-    zhkSelect?.focus();
-    return;
-  }
-
-  if (!payload.name || !payload.phone) {
-    setAlert('error', 'Имя и телефон обязательны.');
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+  function fillSelect(select, values, placeholder, extraOption) {
+    if (!select) return;
+    select.innerHTML = '';
+    const first = document.createElement('option');
+    first.value = '';
+    first.textContent = placeholder;
+    select.appendChild(first);
+    values.forEach((value) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
     });
+    if (extraOption) {
+      const option = document.createElement('option');
+      option.value = extraOption.value;
+      option.textContent = extraOption.label;
+      select.appendChild(option);
+    }
+  }
 
-    let data = {};
-    try {
-      data = await res.json();
-    } catch (error) {
-      data = {};
+  function updateZhkOptions() {
+    const city = citySelect.value;
+    const zhks = city && dataset[city] ? Object.keys(dataset[city]) : [];
+    fillSelect(
+      zhkSelect,
+      zhks,
+      city ? 'Выберите ЖК' : 'Сначала выберите город',
+      city ? { value: OTHER_ZHK, label: 'Моего ЖК нет / частный адрес' } : null
+    );
+    zhkSelect.disabled = !city;
+    fillSelect(addressSelect, [], 'Сначала выберите ЖК');
+    addressSelect.disabled = true;
+    manualAddressWrap.hidden = true;
+    addressSelectWrap.hidden = false;
+    customZhkInput.value = '';
+    manualAddressInput.value = '';
+  }
+
+  function updateAddressOptions() {
+    const city = citySelect.value;
+    const zhk = zhkSelect.value;
+
+    if (zhk === OTHER_ZHK) {
+      addressSelectWrap.hidden = true;
+      manualAddressWrap.hidden = false;
+      customZhkWrap.hidden = false;
+      addressSelect.disabled = true;
+      manualAddressInput.required = true;
+      requestAnimationFrame(() => manualAddressInput.focus());
+      return;
     }
 
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Ошибка отправки заявки');
-
-    form.reset();
-    updateZhkOptions();
-    currentStep = 1;
-    renderSteps();
-    setAlert('success', 'Заявка успешно отправлена. Она уже появилась в админке.');
-  } catch (err) {
-    setAlert('error', err.message || 'Ошибка отправки заявки');
+    addressSelectWrap.hidden = false;
+    manualAddressWrap.hidden = true;
+    customZhkWrap.hidden = false;
+    manualAddressInput.required = false;
+    const addresses = city && zhk && dataset[city]?.[zhk] ? dataset[city][zhk] : [];
+    fillSelect(
+      addressSelect,
+      addresses,
+      zhk ? 'Выберите дом / адрес' : 'Сначала выберите ЖК',
+      zhk ? { value: OTHER_ADDRESS, label: 'Моего адреса нет — ввести вручную' } : null
+    );
+    addressSelect.disabled = !zhk;
   }
-});
 
-updateZhkOptions();
-renderSteps();
-renderClient(clientIndex);
+  function handleAddressChange() {
+    if (addressSelect.value === OTHER_ADDRESS) {
+      manualAddressWrap.hidden = false;
+      customZhkWrap.hidden = true;
+      manualAddressInput.required = true;
+      requestAnimationFrame(() => manualAddressInput.focus());
+    } else if (zhkSelect.value !== OTHER_ZHK) {
+      manualAddressWrap.hidden = true;
+      customZhkWrap.hidden = false;
+      manualAddressInput.required = false;
+      manualAddressInput.value = '';
+    }
+  }
+
+  function renderSteps() {
+    steps.forEach((button) => {
+      const step = Number(button.dataset.step);
+      button.classList.toggle('is-active', step === currentStep);
+      button.classList.toggle('is-complete', step < currentStep);
+      button.setAttribute('aria-current', step === currentStep ? 'step' : 'false');
+    });
+    panels.forEach((panel) => panel.classList.toggle('is-active', Number(panel.dataset.panel) === currentStep));
+  }
+
+  function resolveAddress() {
+    if (zhkSelect.value === OTHER_ZHK || addressSelect.value === OTHER_ADDRESS) {
+      return manualAddressInput.value.trim();
+    }
+    return addressSelect.value.trim();
+  }
+
+  function resolveZhk() {
+    if (zhkSelect.value === OTHER_ZHK) return customZhkInput.value.trim() || 'Другой адрес / частный дом';
+    return zhkSelect.value.trim();
+  }
+
+  function validateStep(step) {
+    setAlert();
+
+    if (step >= 2 && !citySelect.value) {
+      setAlert('error', 'Выберите город.');
+      citySelect.focus();
+      return false;
+    }
+
+    if (step >= 3) {
+      if (!zhkSelect.value) {
+        setAlert('error', 'Выберите ЖК или пункт для ручного ввода.');
+        zhkSelect.focus();
+        return false;
+      }
+      if (!resolveAddress()) {
+        setAlert('error', 'Выберите или введите адрес дома.');
+        if (zhkSelect.value === OTHER_ZHK || addressSelect.value === OTHER_ADDRESS) manualAddressInput.focus();
+        else addressSelect.focus();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function goToStep(target) {
+    if (target > currentStep && !validateStep(target)) return;
+    currentStep = Math.max(1, Math.min(3, target));
+    renderSteps();
+  }
+
+  function formatRuPhone(value) {
+    let digits = String(value).replace(/\D/g, '');
+    if (!digits) return '';
+    if (digits[0] === '8') digits = `7${digits.slice(1)}`;
+    if (digits[0] !== '7') digits = `7${digits}`;
+    digits = digits.slice(0, 11);
+    const rest = digits.slice(1);
+    let out = '+7';
+    if (rest.length) out += ` (${rest.slice(0, 3)}`;
+    if (rest.length >= 3) out += ')';
+    if (rest.length > 3) out += ` ${rest.slice(3, 6)}`;
+    if (rest.length > 6) out += `-${rest.slice(6, 8)}`;
+    if (rest.length > 8) out += `-${rest.slice(8, 10)}`;
+    return out;
+  }
+
+  function validRuPhone(value) {
+    const digits = String(value).replace(/\D/g, '');
+    return digits.length === 11 && (digits.startsWith('7') || digits.startsWith('8'));
+  }
+
+  citySelect.addEventListener('change', () => {
+    updateZhkOptions();
+    setAlert();
+  });
+  zhkSelect.addEventListener('change', () => {
+    updateAddressOptions();
+    setAlert();
+  });
+  addressSelect.addEventListener('change', () => {
+    handleAddressChange();
+    setAlert();
+  });
+  phoneInput.addEventListener('input', () => {
+    phoneInput.value = formatRuPhone(phoneInput.value);
+  });
+
+  document.querySelectorAll('[data-next-step]').forEach((button) => button.addEventListener('click', () => goToStep(currentStep + 1)));
+  document.querySelectorAll('[data-prev-step]').forEach((button) => button.addEventListener('click', () => goToStep(currentStep - 1)));
+  steps.forEach((button) => button.addEventListener('click', () => {
+    const target = Number(button.dataset.step);
+    if (target <= currentStep) goToStep(target);
+    else goToStep(target);
+  }));
+
+  function scrollToOrder() {
+    const orderCard = document.getElementById('order-request');
+    orderCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.setTimeout(() => {
+      const focusTarget = currentStep === 1 ? citySelect : currentStep === 2 ? zhkSelect : document.getElementById('name');
+      focusTarget?.focus({ preventScroll: true });
+    }, 450);
+  }
+  openButtons.forEach((button) => button.addEventListener('click', scrollToOrder));
+
+  function resetForm() {
+    form.reset();
+    form.hidden = false;
+    formSuccess.hidden = true;
+    currentStep = 1;
+    updateZhkOptions();
+    renderSteps();
+    setAlert();
+  }
+  newOrderButton?.addEventListener('click', resetForm);
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!validateStep(3)) return;
+
+    const name = document.getElementById('name').value.trim();
+    const phone = phoneInput.value.trim();
+    const consent = document.getElementById('consent').checked;
+
+    if (name.length < 2) {
+      setAlert('error', 'Укажите имя.');
+      document.getElementById('name').focus();
+      return;
+    }
+    if (!validRuPhone(phone)) {
+      setAlert('error', 'Проверьте номер телефона.');
+      phoneInput.focus();
+      return;
+    }
+    if (!consent) {
+      setAlert('error', 'Подтвердите согласие на обработку персональных данных.');
+      document.getElementById('consent').focus();
+      return;
+    }
+
+    const payload = {
+      service: document.getElementById('service').value,
+      city: citySelect.value,
+      zhk: resolveZhk(),
+      house: resolveAddress(),
+      entrance: document.getElementById('entrance').value.trim(),
+      flat: document.getElementById('flat').value.trim(),
+      floor: document.getElementById('floor').value.trim(),
+      name,
+      phone,
+      comment: document.getElementById('comment').value.trim(),
+      consent: true,
+      website: document.getElementById('website').value
+    };
+
+    const originalText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Отправляем…';
+    setAlert();
+
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) throw new Error(data.error || 'Не удалось отправить заявку');
+
+      form.hidden = true;
+      formSuccess.hidden = false;
+      successText.textContent = data.id
+        ? `Заявка №${data.id} сохранена. Свяжемся с вами для уточнения расчёта и даты.`
+        : 'Заявка принята.';
+    } catch (error) {
+      setAlert('error', error.message || 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.');
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+    }
+  });
+
+  updateZhkOptions();
+  renderSteps();
+})();
