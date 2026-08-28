@@ -6,12 +6,12 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>АйRus — панель заказов</title>
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../css/admin.css?v=7">
+  <link rel="stylesheet" href="../css/admin.css?v=8">
 </head>
 <body class="admin-body">
   <header class="admin-header">
     <div class="admin-container admin-header-inner">
-      <a class="admin-brand" href="/"><span>Ай</span>Rus</a>
+      <a class="admin-brand" href="/admin/dashboard.html" title="К выбору городов"><span>Ай</span>Rus</a>
       <div class="admin-header-title">Панель заказов</div>
       <div class="admin-header-tools">
         <label class="search-shell">
@@ -37,7 +37,10 @@
         <section class="dashboard-panel main-panel">
           <div class="panel-topline">
             <nav id="breadcrumbs" class="breadcrumbs" aria-label="Навигация"></nav>
-            <button id="allAddressesBtn" class="text-btn" type="button" hidden>Все адреса города</button>
+            <div class="panel-nav-actions">
+              <button id="backToCitiesBtn" class="text-btn" type="button" hidden>← К выбору городов</button>
+              <button id="allAddressesBtn" class="text-btn" type="button" hidden>Все адреса города</button>
+            </div>
           </div>
           <div class="panel-title-row">
             <div>
@@ -55,7 +58,8 @@
             <strong>Следующий контакт</strong>
             <p>В карточке заявки можно сохранить заметку и дату следующего звонка.</p>
           </div>
-          <a class="admin-btn admin-btn-primary full" href="/">Открыть сайт</a>
+          <a class="admin-btn admin-btn-primary full" href="/admin/dashboard.html">К выбору городов</a>
+          <a class="admin-btn admin-btn-secondary full" href="/">Открыть сайт</a>
         </aside>
       </div>
     </div>
@@ -90,6 +94,6 @@
     </form>
   </dialog>
 
-  <script src="../js/admin-dashboard.js?v=7" defer></script>
+  <script src="../js/admin-dashboard.js?v=8" defer></script>
 </body>
 </html>

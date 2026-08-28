@@ -20,6 +20,7 @@
   const searchInput = document.getElementById('searchInput');
   const resetViewBtn = document.getElementById('resetViewBtn');
   const allAddressesBtn = document.getElementById('allAddressesBtn');
+  const backToCitiesBtn = document.getElementById('backToCitiesBtn');
   const logoutBtn = document.getElementById('logoutBtn');
   const orderDialog = document.getElementById('orderDialog');
   const orderEditForm = document.getElementById('orderEditForm');
@@ -273,10 +274,17 @@
     renderOrders(stageRows.filter((row) => row.house === state.house));
   }
 
+  function returnToCities() {
+    Object.assign(state, { city: '', zhk: '', house: '', showAllAddresses: false });
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function render() {
     renderTabs();
     renderBreadcrumbs();
     renderStats();
+    backToCitiesBtn.hidden = !state.city;
     renderContent();
   }
 
@@ -336,7 +344,7 @@
   breadcrumbs.addEventListener('click', (event) => {
     const button = event.target.closest('[data-crumb]');
     if (!button) return;
-    if (button.dataset.crumb === 'root') Object.assign(state, { city: '', zhk: '', house: '', showAllAddresses: false });
+    if (button.dataset.crumb === 'root') { returnToCities(); return; }
     if (button.dataset.crumb === 'city') Object.assign(state, { zhk: '', house: '', showAllAddresses: false });
     if (button.dataset.crumb === 'zhk') state.house = '';
     render();
@@ -374,6 +382,8 @@
     Object.assign(state, { zhk: '', house: '', showAllAddresses: true });
     render();
   });
+
+  backToCitiesBtn.addEventListener('click', returnToCities);
 
   logoutBtn.addEventListener('click', async () => {
     try { await apiFetch('/api/logout', { method: 'POST' }); } catch (_) {}

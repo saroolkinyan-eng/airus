@@ -106,3 +106,9 @@ Public button: /admin/login.html
 Temporary login is configured server-side. The temporary password is intentionally not written to this repository.
 To switch to Render environment credentials later, set ADMIN_USE_ENV=1 and provide ADMIN_LOGIN + ADMIN_PASSWORD.
 Orders shown in the dashboard come from the same SQLite database used by /api/orders.
+
+V14 ADMIN NAVIGATION
+- The AIRUS logo inside the admin panel returns to /admin/dashboard.html (city selection).
+- A "К выбору городов" button is shown when a city/order scope is open.
+- The sidebar primary button returns to city selection instead of the public homepage.
+- The public homepage remains available only through the separate "Открыть сайт" button.

@@ -107,122 +107,7 @@
           </div>
         </div>
 
-        <aside class="order-card" id="order-request" aria-labelledby="orderTitle">
-          <div class="order-card-head">
-            <div>
-              <span class="card-kicker">Заявка на расчёт</span>
-              <h2 id="orderTitle">Найдите свой дом</h2>
-            </div>
-            <span class="secure-label">Без лишних звонков</span>
-          </div>
 
-          <div class="wizard-progress" aria-label="Шаги формы">
-            <button class="wizard-step is-active" type="button" data-step="1"><span>1</span><b>Город</b></button>
-            <button class="wizard-step" type="button" data-step="2"><span>2</span><b>Адрес</b></button>
-            <button class="wizard-step" type="button" data-step="3"><span>3</span><b>Контакт</b></button>
-          </div>
-
-          <form id="orderForm" class="wizard-form" novalidate>
-            <input type="hidden" id="service" value="Коллективная мойка балконов">
-            <label class="hp-field" aria-hidden="true">Ваш сайт<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
-
-            <section class="wizard-panel is-active" data-panel="1" aria-label="Шаг 1. Город">
-              <label class="field">
-                <span>Город</span>
-                <select id="city" name="city" required>
-                  <option value="">Выберите город</option>
-                  <option value="Челябинск">Челябинск</option>
-                  <option value="Уфа">Уфа</option>
-                </select>
-              </label>
-              <p class="field-help">Список ЖК и домов изменится автоматически.</p>
-              <div class="wizard-actions end">
-                <button class="button button-primary" type="button" data-next-step>Далее</button>
-              </div>
-            </section>
-
-            <section class="wizard-panel" data-panel="2" aria-label="Шаг 2. Адрес">
-              <label class="field">
-                <span>Жилой комплекс</span>
-                <select id="zhk" name="zhk" required disabled>
-                  <option value="">Сначала выберите город</option>
-                </select>
-              </label>
-
-              <label class="field" id="addressSelectWrap">
-                <span>Дом / адрес</span>
-                <select id="address" name="address" disabled>
-                  <option value="">Сначала выберите ЖК</option>
-                </select>
-              </label>
-
-              <div class="manual-address-fields" id="manualAddressWrap" hidden>
-                <label class="field" id="customZhkWrap">
-                  <span>Название ЖК <small>необязательно</small></span>
-                  <input id="customZhk" name="customZhk" maxlength="120" placeholder="Например, ЖК Северный">
-                </label>
-                <label class="field">
-                  <span>Адрес дома</span>
-                  <input id="manualAddress" name="manualAddress" maxlength="180" placeholder="Улица и номер дома" autocomplete="street-address">
-                </label>
-              </div>
-
-              <p class="field-help">Не нашли дом? Выберите «Моего адреса нет» — адрес можно ввести вручную.</p>
-              <div class="wizard-actions between">
-                <button class="button button-ghost" type="button" data-prev-step>Назад</button>
-                <button class="button button-primary" type="button" data-next-step>Далее</button>
-              </div>
-            </section>
-
-            <section class="wizard-panel" data-panel="3" aria-label="Шаг 3. Контактные данные">
-              <div class="form-grid">
-                <label class="field full">
-                  <span>Имя</span>
-                  <input id="name" name="name" maxlength="80" placeholder="Как к вам обращаться" autocomplete="name" required>
-                </label>
-                <label class="field full">
-                  <span>Телефон</span>
-                  <input id="phone" name="phone" type="tel" inputmode="tel" maxlength="22" placeholder="+7 (900) 000-00-00" autocomplete="tel" required>
-                </label>
-                <label class="field">
-                  <span>Подъезд <small>необязательно</small></span>
-                  <input id="entrance" name="entrance" maxlength="30" inputmode="numeric" placeholder="1">
-                </label>
-                <label class="field">
-                  <span>Квартира <small>необязательно</small></span>
-                  <input id="flat" name="flat" maxlength="30" inputmode="numeric" placeholder="42">
-                </label>
-                <label class="field full">
-                  <span>Этаж <small>необязательно</small></span>
-                  <input id="floor" name="floor" maxlength="30" inputmode="numeric" placeholder="12">
-                </label>
-                <label class="field full">
-                  <span>Комментарий <small>необязательно</small></span>
-                  <textarea id="comment" name="comment" maxlength="1200" rows="3" placeholder="Например: угловой балкон, сильное загрязнение"></textarea>
-                </label>
-              </div>
-
-              <label class="consent-row">
-                <input id="consent" name="consent" type="checkbox" required>
-                <span>Я даю <a href="/consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> для обработки заявки. <a href="/privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>.</span>
-              </label>
-
-              <div class="wizard-actions between">
-                <button class="button button-ghost" type="button" data-prev-step>Назад</button>
-                <button class="button button-primary submit-button" id="submitOrder" type="submit">Отправить заявку</button>
-              </div>
-            </section>
-
-            <div id="formAlert" class="form-alert" role="status" aria-live="polite"></div>
-          </form>
-
-          <div class="form-success" id="formSuccess" hidden>
-            <div class="success-icon">✓</div>
-            <h3>Заявка принята</h3>
-            <p id="successText">Свяжемся с вами для уточнения расчёта и даты.</p>
-            <button class="button button-ghost" id="newOrderButton" type="button">Отправить ещё одну</button>
-          </div>
-        </aside>
       </div>
     </section>
 
@@ -344,6 +229,137 @@
       </div>
     </section>
 
+
+    <section class="section order-section" id="request">
+      <div class="container order-section-grid">
+        <div class="order-section-copy">
+          <span class="section-kicker">Заявка на расчёт</span>
+          <h2>Узнайте стоимость для своего дома</h2>
+          <p>Сначала выберите город и адрес. Затем оставьте контакт — мы проверим заявки по вашему дому, рассчитаем объём и свяжемся с вами.</p>
+          <ul class="order-benefits">
+            <li><span>01</span><div><b>Без обязательств</b><small>Расчёт не обязывает заказывать работы.</small></div></li>
+            <li><span>02</span><div><b>Коллективная цена</b><small>Учитываем общий объём заявок по дому.</small></div></li>
+            <li><span>03</span><div><b>Один согласованный выезд</b><small>Объединяем заявки и согласовываем удобную дату.</small></div></li>
+          </ul>
+        </div>
+        <aside class="order-card" id="order-request" aria-labelledby="orderTitle">
+          <div class="order-card-head">
+            <div>
+              <span class="card-kicker">Заявка на расчёт</span>
+              <h2 id="orderTitle">Найдите свой дом</h2>
+            </div>
+            <span class="secure-label">Без лишних звонков</span>
+          </div>
+
+          <div class="wizard-progress" aria-label="Шаги формы">
+            <button class="wizard-step is-active" type="button" data-step="1"><span>1</span><b>Город</b></button>
+            <button class="wizard-step" type="button" data-step="2"><span>2</span><b>Адрес</b></button>
+            <button class="wizard-step" type="button" data-step="3"><span>3</span><b>Контакт</b></button>
+          </div>
+
+          <form id="orderForm" class="wizard-form" novalidate>
+            <input type="hidden" id="service" value="Коллективная мойка балконов">
+            <label class="hp-field" aria-hidden="true">Ваш сайт<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
+
+            <section class="wizard-panel is-active" data-panel="1" aria-label="Шаг 1. Город">
+              <label class="field">
+                <span>Город</span>
+                <select id="city" name="city" required>
+                  <option value="">Выберите город</option>
+                  <option value="Челябинск">Челябинск</option>
+                  <option value="Уфа">Уфа</option>
+                </select>
+              </label>
+              <p class="field-help">Список ЖК и домов изменится автоматически.</p>
+              <div class="wizard-actions end">
+                <button class="button button-primary" type="button" data-next-step>Далее</button>
+              </div>
+            </section>
+
+            <section class="wizard-panel" data-panel="2" aria-label="Шаг 2. Адрес">
+              <label class="field">
+                <span>Жилой комплекс</span>
+                <select id="zhk" name="zhk" required disabled>
+                  <option value="">Сначала выберите город</option>
+                </select>
+              </label>
+
+              <label class="field" id="addressSelectWrap">
+                <span>Дом / адрес</span>
+                <select id="address" name="address" disabled>
+                  <option value="">Сначала выберите ЖК</option>
+                </select>
+              </label>
+
+              <div class="manual-address-fields" id="manualAddressWrap" hidden>
+                <label class="field" id="customZhkWrap">
+                  <span>Название ЖК <small>необязательно</small></span>
+                  <input id="customZhk" name="customZhk" maxlength="120" placeholder="Например, ЖК Северный">
+                </label>
+                <label class="field">
+                  <span>Адрес дома</span>
+                  <input id="manualAddress" name="manualAddress" maxlength="180" placeholder="Улица и номер дома" autocomplete="street-address">
+                </label>
+              </div>
+
+              <p class="field-help">Не нашли дом? Выберите «Моего адреса нет» — адрес можно ввести вручную.</p>
+              <div class="wizard-actions between">
+                <button class="button button-ghost" type="button" data-prev-step>Назад</button>
+                <button class="button button-primary" type="button" data-next-step>Далее</button>
+              </div>
+            </section>
+
+            <section class="wizard-panel" data-panel="3" aria-label="Шаг 3. Контактные данные">
+              <div class="form-grid">
+                <label class="field full">
+                  <span>Имя</span>
+                  <input id="name" name="name" maxlength="80" placeholder="Как к вам обращаться" autocomplete="name" required>
+                </label>
+                <label class="field full">
+                  <span>Телефон</span>
+                  <input id="phone" name="phone" type="tel" inputmode="tel" maxlength="22" placeholder="+7 (900) 000-00-00" autocomplete="tel" required>
+                </label>
+                <label class="field">
+                  <span>Подъезд <small>необязательно</small></span>
+                  <input id="entrance" name="entrance" maxlength="30" inputmode="numeric" placeholder="1">
+                </label>
+                <label class="field">
+                  <span>Квартира <small>необязательно</small></span>
+                  <input id="flat" name="flat" maxlength="30" inputmode="numeric" placeholder="42">
+                </label>
+                <label class="field full">
+                  <span>Этаж <small>необязательно</small></span>
+                  <input id="floor" name="floor" maxlength="30" inputmode="numeric" placeholder="12">
+                </label>
+                <label class="field full">
+                  <span>Комментарий <small>необязательно</small></span>
+                  <textarea id="comment" name="comment" maxlength="1200" rows="3" placeholder="Например: угловой балкон, сильное загрязнение"></textarea>
+                </label>
+              </div>
+
+              <label class="consent-row">
+                <input id="consent" name="consent" type="checkbox" required>
+                <span>Я даю <a href="/consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> для обработки заявки. <a href="/privacy.html" target="_blank" rel="noopener">Политика конфиденциальности</a>.</span>
+              </label>
+
+              <div class="wizard-actions between">
+                <button class="button button-ghost" type="button" data-prev-step>Назад</button>
+                <button class="button button-primary submit-button" id="submitOrder" type="submit">Отправить заявку</button>
+              </div>
+            </section>
+
+            <div id="formAlert" class="form-alert" role="status" aria-live="polite"></div>
+          </form>
+
+          <div class="form-success" id="formSuccess" hidden>
+            <div class="success-icon">✓</div>
+            <h3>Заявка принята</h3>
+            <p id="successText">Свяжемся с вами для уточнения расчёта и даты.</p>
+            <button class="button button-ghost" id="newOrderButton" type="button">Отправить ещё одну</button>
+          </div>
+        </aside>
+      </div>
+    </section>
 
     <section class="section section-light clients-section" id="clients">
       <div class="container">

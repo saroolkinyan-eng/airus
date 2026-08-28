@@ -219,3 +219,10 @@ button { color: inherit; }
   .dialog-info { gap: 6px; margin: 12px 0; }
   .dialog-info div { padding: 9px; }
 }
+
+/* v14 admin navigation */
+.panel-nav-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:700px){
+  .panel-nav-actions{width:100%;justify-content:flex-start;gap:6px}
+  .panel-nav-actions .text-btn{min-height:38px;padding:8px 10px}
+}
