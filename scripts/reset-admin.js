@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
-const dataDir = path.join(root, 'data');
+const dataDir = process.env.AIRUS_DATA_DIR ? path.resolve(process.env.AIRUS_DATA_DIR) : path.join(root, 'data');
 const authFile = path.join(dataDir, 'admin-auth.json');
 const login = String(process.env.ADMIN_LOGIN || process.argv[2] || 'airus-admin').trim();
 const password = String(process.env.ADMIN_PASSWORD || crypto.randomBytes(15).toString('base64url'));

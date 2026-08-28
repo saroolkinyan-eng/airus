@@ -164,3 +164,58 @@ button { color: inherit; }
   .order-dialog { width: calc(100vw - 20px); }
   .dialog-card { padding: 18px; }
 }
+
+/* v9 — compact admin on phones */
+@media (max-width: 520px) {
+  .admin-container { width: min(calc(100% - 14px), 1420px); }
+  .admin-header-inner { min-height: 54px; gap: 6px; }
+  .admin-brand { font-size: 20px; }
+  .search-shell { width: 45vw; min-height: 36px; padding-inline: 8px; }
+  .search-shell input { font-size: 10px; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 9px; }
+  .admin-main { padding: 10px 0 34px; }
+  .admin-toolbar { gap: 8px; margin-bottom: 9px; }
+  .status-tabs { gap: 5px; }
+  .status-tab { min-height: 32px; padding: 0 9px; border-radius: 8px; font-size: 9px; }
+  .status-tab .count { min-width: 17px; height: 17px; font-size: 8px; }
+  .toolbar-actions { gap: 5px; }
+  .admin-btn { min-height: 36px; padding: 0 11px; font-size: 10px; }
+  .dashboard-grid { gap: 9px; }
+  .main-panel, .stats-panel { padding: 11px; border-radius: 13px; }
+  .main-panel { min-height: 390px; }
+  .panel-topline { min-height: 26px; }
+  .breadcrumbs { font-size: 8px; }
+  .panel-title-row { margin: 7px 0 10px; gap: 10px; }
+  .panel-title-row h1 { font-size: 18px; }
+  .panel-title-row h2 { font-size: 16px; }
+  .panel-title-row p { font-size: 8px; }
+  .entity-list { gap: 6px; }
+  .entity-item { gap: 10px; padding: 11px; border-radius: 10px; }
+  .entity-label { font-size: 12px; }
+  .entity-sub { margin-top: 2px; font-size: 8px; }
+  .entity-count { min-width: 29px; height: 24px; font-size: 9px; }
+  .stats-grid { gap: 6px; }
+  .stat-card { padding: 10px; border-radius: 9px; }
+  .stat-label { min-height: 22px; font-size: 8px; }
+  .stat-value { margin-top: 4px; font-size: 17px; }
+  .entrance-stack { gap: 8px; }
+  .entrance-card { border-radius: 10px; }
+  .entrance-head { min-height: 40px; padding: 0 10px; }
+  .mobile-orders { gap: 6px; padding: 7px; }
+  .mobile-order { padding: 10px; border-radius: 9px; }
+  .mobile-order h3 { font-size: 12px; }
+  .mobile-order p { font-size: 8px; }
+  .mobile-order-contact { margin: 7px 0; font-size: 9px; }
+  .small-btn { min-height: 25px; padding: 0 7px; font-size: 8px; }
+  .login-page { padding: 12px; }
+  .login-card { padding: 21px 17px; border-radius: 18px; }
+  .login-kicker { margin-top: 22px; }
+  .login-card h1 { font-size: 28px; }
+  .login-card > p { margin-bottom: 19px; font-size: 11px; }
+  .admin-field { gap: 5px; margin-top: 10px; }
+  .admin-field input { min-height: 42px; }
+  .dialog-card { padding: 14px; }
+  .dialog-head h2 { font-size: 21px; }
+  .dialog-info { gap: 6px; margin: 12px 0; }
+  .dialog-info div { padding: 9px; }
+}

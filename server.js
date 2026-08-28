@@ -8,9 +8,16 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, 'public');
-const DATA_DIR = path.join(ROOT, 'data');
+const PERSIST_DIR = process.env.AIRUS_DATA_DIR
+  ? path.resolve(process.env.AIRUS_DATA_DIR)
+  : ROOT;
+const DATA_DIR = process.env.AIRUS_DATA_DIR
+  ? PERSIST_DIR
+  : path.join(ROOT, 'data');
 const AUTH_FILE = path.join(DATA_DIR, 'admin-auth.json');
-const DB_FILE = path.join(ROOT, 'database.sqlite');
+const DB_FILE = process.env.AIRUS_DATA_DIR
+  ? path.join(PERSIST_DIR, 'database.sqlite')
+  : path.join(ROOT, 'database.sqlite');
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
 const CONSENT_VERSION = '2026-08-28';
 const ALLOWED_CITIES = new Set(['Челябинск', 'Уфа']);
@@ -18,7 +25,7 @@ const ALLOWED_STATUSES = new Set(['Новая', 'В работе', 'Ожидае
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 app.disable('x-powered-by');
-app.set('trust proxy', process.env.TRUST_PROXY === '1' ? 1 : false);
+app.set('trust proxy', (process.env.TRUST_PROXY === '1' || process.env.RENDER === 'true') ? 1 : false);
 
 function securityHeaders(req, res, next) {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -441,6 +448,7 @@ app.delete('/api/orders/:id', requireAdminMutation, (req, res) => {
 });
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/healthz', (req, res) => res.status(200).type('text/plain').send('ok'));
 
 app.get('/admin/dashboard.html', requireAdminPage, (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'admin', 'dashboard.html'));
@@ -463,6 +471,8 @@ app.use((req, res) => res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html')
 
 app.listen(PORT, () => {
   console.log(`AIRUS started on http://localhost:${PORT}`);
+  console.log(`Database: ${DB_FILE}`);
+  if (process.env.AIRUS_DATA_DIR) console.log(`Persistent data directory: ${PERSIST_DIR}`);
   console.log(`Admin login: ${adminAuth.login}`);
   if (generatedAdminPassword) {
     console.log('FIRST START: generated admin password:', generatedAdminPassword);
