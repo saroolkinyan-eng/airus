@@ -1530,3 +1530,87 @@ html, body { max-width:100%; overflow-x:hidden; }
   .header-actions { justify-content:flex-end; }
   .header-burger { display:flex; }
 }
+
+/* v27 — mobile header keeps every navigation and action control available */
+@media (max-width: 760px) {
+  .site-header .header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px 9px;
+    min-height: 0;
+    padding-top: 8px;
+    padding-bottom: 7px;
+  }
+
+  .site-header .brand {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .site-header .header-actions {
+    display: flex;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+    margin-left: auto;
+  }
+
+  .site-header .header-phone {
+    display: inline-flex;
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-end;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .site-header .header-actions .button {
+    display: inline-flex;
+    min-height: 36px;
+    padding-inline: 11px;
+    font-size: 10px;
+  }
+
+  .site-header .admin-login-link {
+    min-height: 36px;
+    padding-inline: 10px;
+    font-size: 10px;
+  }
+
+  .site-header .main-nav {
+    display: flex;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    order: 5;
+    justify-content: flex-start;
+    gap: 7px;
+    min-width: 0;
+    margin: 0;
+    padding: 2px 0 1px;
+    overflow: visible;
+  }
+
+  .site-header .main-nav a {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 9px;
+    background: rgba(255,255,255,.045);
+    color: #d8e8ee;
+    font-size: 11px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .site-header .main-nav a:hover,
+  .site-header .main-nav a:focus-visible {
+    border-color: rgba(66,214,232,.55);
+    background: rgba(66,214,232,.12);
+    color: #fff;
+  }
+
+  .site-header .header-burger { display: none; }
+}
