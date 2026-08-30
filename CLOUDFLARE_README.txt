@@ -1,149 +1,104 @@
-AIRUS — ПОЛНАЯ СБОРКА ДЛЯ CLOUDFLARE WORKERS + D1
-==================================================
+AIRUS — CLOUDFLARE WORKERS + D1 — REPAIR BUILD 3.1
+====================================================
 
-Что изменено
-------------
-Эта версия больше НЕ требует Render, Express или локальный SQLite-файл.
+Эта сборка исправляет ошибку «Внутренняя ошибка сервера» при входе в админку.
 
-Вся серверная часть перенесена в Cloudflare:
-- сайт и статика: Cloudflare Workers Static Assets
-- API: Cloudflare Worker
-- заявки, история и сессии: Cloudflare D1
-- вход в админку: Worker + HttpOnly Secure cookie
-- remembered-device: до 30 дней
-- rate limit входа и отправки заявок: D1
-- CSV-экспорт сохранён
-- /healthz и /api/health сохранены
-- /admin/dashboard.html защищён на уровне Worker
+Что исправлено
+--------------
+1. Вход в админку больше не зависит от D1.
+   Админ-сессия теперь подписывается HMAC и хранится только в защищённой HttpOnly cookie.
+   Поэтому неисправность или пустая D1 не ломает сам /api/login.
 
-Исходный дизайн и public/ сохранены.
+2. SESSION_SECRET создаётся автоматически при развёртывании и отправляется в Cloudflare
+   через `wrangler secret put`. В исходниках секрет не хранится.
 
-ВАЖНО ПРО БАЗУ D1
------------------
-В wrangler.jsonc указана D1 binding "DB" без account-specific database_id.
-Современный Wrangler умеет автоматически создать и привязать D1 при первом deploy.
-Worker также сам создаёт недостающие таблицы через CREATE TABLE IF NOT EXISTS,
-поэтому отдельная ручная миграция для первого запуска не обязательна.
+3. D1 создаётся и привязывается детерминированно как `airus-db`.
+   Скрипт применяет migrations/0001_init.sql к удалённой базе до рабочего запуска.
 
-Быстрый деплой с компьютера
----------------------------
-1. Установите Node.js 20+.
-2. Распакуйте архив.
-3. На Windows можно просто запустить:
+4. Worker называется `airus`, поэтому повторный deploy обновляет текущий Worker
+   и сохраняет адрес вида airus.<ваш workers.dev subdomain>.workers.dev.
 
-   DEPLOY_CLOUDFLARE_WINDOWS.cmd
+5. Упрощён D1 rate-limit: убран сложный SQL RETURNING из критического пути входа.
 
-   На Linux/macOS:
+6. /api/health теперь отдельно показывает состояние D1 и наличие секрета сессии.
 
-   ./deploy-cloudflare.sh
+КАК ИСПРАВИТЬ ТЕКУЩИЙ САЙТ НА WINDOWS
+--------------------------------------
+1. Распакуйте ZIP в отдельную папку.
+2. Запустите:
 
-   Или вручную:
+   REPAIR_EXISTING_CLOUDFLARE_WINDOWS.cmd
 
-   npm install
-   npx wrangler login
-   npm run deploy
+   Можно также запустить DEPLOY_CLOUDFLARE_WINDOWS.cmd — результат тот же.
 
-4. Wrangler 4.45+ автоматически создаст D1 для draft binding DB при первом deploy (эта функция Cloudflare сейчас помечена как beta).
-5. В конце команды будет адрес вида:
-   https://airus-cloudflare.<ваш-subdomain>.workers.dev
+3. При первом запуске откроется авторизация Cloudflare. Разрешите Wrangler доступ к
+   тому же аккаунту, где сейчас находится Worker `airus`.
 
-Проверка
---------
+4. Скрипт автоматически:
+   - установит Wrangler
+   - проверит JavaScript
+   - найдёт или создаст D1 `airus-db`
+   - пропишет database_name/database_id в wrangler.jsonc
+   - применит миграции к удалённой D1
+   - обновит Worker `airus`
+   - создаст новый случайный SESSION_SECRET
+   - загрузит секрет в Cloudflare
+   - ещё раз проверит deploy
+
+ПРОВЕРКА ПОСЛЕ DEPLOY
+---------------------
 Откройте:
-- /healthz              -> должно быть: ok
-- /api/health           -> JSON с runtime=cloudflare-workers и database=d1
-- /admin/login.html     -> форма входа
-- /admin/dashboard.html -> без сессии перекидывает на login
 
-Текущий временный админ
------------------------
-Логин сохранён прежний.
-Пароль в исходном коде НЕ хранится открытым текстом: в Worker лежит PBKDF2-хэш.
-То есть прежние учётные данные продолжают работать сразу после деплоя.
+   https://airus.saro-olkinyan.workers.dev/api/health
 
-Как безопасно поменять пароль без изменения исходников
--------------------------------------------------------
-Выполните:
+Нормальный ответ:
 
-   npx wrangler secret put ADMIN_PASSWORD
+   {"ok":true,"runtime":"cloudflare-workers","database":"d1","session":"configured"}
 
-Wrangler попросит ввести новое значение. После установки secret оно автоматически
-получит приоритет над встроенным временным хэшем.
+Затем:
 
-Логин можно поменять в wrangler.jsonc в vars.ADMIN_LOGIN.
+   https://airus.saro-olkinyan.workers.dev/admin/login
 
-Если хотите удалить override-пароль и снова использовать встроенный хэш:
+Используйте прежние данные администратора.
 
-   npx wrangler secret delete ADMIN_PASSWORD
+Если /api/health показывает session=missing
+-------------------------------------------
+В папке проекта выполните:
 
-Локальный запуск
-----------------
-   npm install
-   npm run dev
+   npx wrangler secret put SESSION_SECRET
 
-Локальный D1 создаётся Wrangler автоматически. Таблицы Worker создаст сам при первом API-запросе.
-
-Legacy-фотографии
------------------
-В исходной сборке часть старых изображений подгружается с climber74.ru.
-При необходимости перед deploy можно зеркалировать доступные старые /static/ ресурсы:
-
-   npm run legacy:import
-
-Если источник недоступен, сайт не должен падать: в страницах сохранены HTTPS fallback-ссылки.
-
-GitHub + Cloudflare Builds
---------------------------
-Можно положить эту папку в GitHub и подключить репозиторий в Workers & Pages.
-Для Worker-проекта используйте команду деплоя:
+Введите длинную случайную строку не короче 32 символов, затем:
 
    npx wrangler deploy
 
-Cloudflare может автоматически provision D1 binding из wrangler.jsonc.
-После первого деплоя проверьте в Worker -> Bindings, что DB имеет тип D1 database.
+Если /api/health показывает database=error
+------------------------------------------
+Выполните:
 
-Пользовательский домен
-----------------------
-После успешного запуска workers.dev можно добавить домен в Cloudflare Dashboard:
-Workers & Pages -> airus-cloudflare -> Settings / Domains & Routes -> Add Custom Domain.
+   npx wrangler d1 migrations apply DB --remote
+   npx wrangler deploy
 
-Файлы, которые больше не нужны
-------------------------------
-server.js, render.yaml и Render README удалены из этой сборки намеренно.
-База данных теперь не является файлом database.sqlite — данные живут в D1 и не теряются при deploy.
+После этого снова проверьте /api/health.
 
-Миграции
---------
-В migrations/0001_init.sql оставлена явная схема для контроля версий.
-Worker сам инициализирует ту же схему, поэтому первый deploy не зависит от ручной миграции.
-Для последующих управляемых миграций можно использовать:
+ВАЖНО ПРО СТАРУЮ D1
+-------------------
+Если предыдущая версия автоматически создала другую D1, новая сборка может переключить
+Worker на `airus-db`. Старая база при этом НЕ удаляется из Cloudflare. Если в ней уже были
+реальные заявки, их можно отдельно перенести в `airus-db`.
 
-   npm run cf:db:migrate:remote
+БЕЗОПАСНАЯ СМЕНА ПАРОЛЯ
+-----------------------
+Чтобы поменять пароль без изменения кода:
 
-Примечание
-----------
-Перед публичным запуском проверьте реальные реквизиты оператора персональных данных в:
-public/privacy.html
-public/consent.html
+   npx wrangler secret put ADMIN_PASSWORD
 
+После установки этот secret имеет приоритет над встроенным PBKDF2-хэшем.
 
-Если автоматическое создание D1 отключено
-----------------------------------------
-Обычно ничего делать не нужно: Wrangler 4.45+ умеет provision draft D1 binding из записи { "binding": "DB" }.
-Если в вашем аккаунте эта beta-функция отключена или deploy сообщает, что DB не привязан, выполните:
-
-   npx wrangler d1 create airus-cloudflare-db
-
-Wrangler предложит добавить binding в wrangler.jsonc. Согласитесь и укажите имя binding: DB.
-После этого снова выполните:
-
-   npm run deploy
-
-Worker сам создаст таблицы при первом API-запросе. При желании схему можно применить явно:
-
-   npm run cf:db:migrate:remote
-
-Важно
-------
-Это Cloudflare Worker + Static Assets + D1, а не обычный статический Pages upload.
-Если загрузить только папку public как Pages/Direct Upload, форма будет отображаться, но /api/login и CRM работать не будут.
+Структура
+---------
+public/                         статический сайт
+src/worker.mjs                  API + админ-аутентификация + D1
+migrations/0001_init.sql        схема D1
+scripts/provision-cloudflare.mjs автоматическая настройка Cloudflare
+DEPLOY_CLOUDFLARE_WINDOWS.cmd   полный deploy
+REPAIR_EXISTING_CLOUDFLARE_WINDOWS.cmd ремонт существующего Worker

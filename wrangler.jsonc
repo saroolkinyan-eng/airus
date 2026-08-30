@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "airus-cloudflare",
+  "name": "airus",
   "main": "src/worker.mjs",
   "compatibility_date": "2026-08-30",
   "assets": {
@@ -10,7 +10,8 @@
   },
   "d1_databases": [
     {
-      "binding": "DB"
+      "binding": "DB",
+      "migrations_dir": "migrations"
     }
   ],
   "vars": {

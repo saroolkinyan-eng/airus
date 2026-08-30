@@ -1,14 +1,15 @@
 {
   "name": "airus-cloudflare-worker",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "check": "node --check src/worker.mjs && node --check scripts/import-legacy-assets.js && node --check public/js/site.js && node --check public/js/premium.js && node --check public/js/legacy-media.js && node --check public/js/admin-access.js && node --check public/js/admin-login.js && node --check public/js/admin-dashboard.js",
+    "check": "node --check src/worker.mjs && node --check scripts/provision-cloudflare.mjs && node --check scripts/import-legacy-assets.js && node --check public/js/site.js && node --check public/js/premium.js && node --check public/js/legacy-media.js && node --check public/js/admin-access.js && node --check public/js/admin-login.js && node --check public/js/admin-dashboard.js",
     "legacy:import": "node scripts/import-legacy-assets.js",
     "cf:db:migrate:local": "wrangler d1 migrations apply DB --local",
-    "cf:db:migrate:remote": "wrangler d1 migrations apply DB --remote"
+    "cf:db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "provision": "node scripts/provision-cloudflare.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.45.0"

@@ -11,6 +11,7 @@ const ALLOWED_CITIES = new Set(['Челябинск', 'Уфа']);
 const ALLOWED_STATUSES = new Set(['Новая', 'В работе', 'Ожидает оплаты', 'Выполнена']);
 const encoder = new TextEncoder();
 let schemaPromise = null;
+const loginRateLimits = new Map();
 
 class HttpError extends Error {
   constructor(status, message, headers = {}) {
@@ -164,8 +165,79 @@ function randomToken(byteLength = 32) {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-async function tokenHash(token) {
-  return bytesToHex(await sha256Bytes(token));
+function bytesToBase64Url(bytes) {
+  let binary = '';
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function base64UrlToBytes(value) {
+  const normalized = String(value).replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  const out = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) out[i] = binary.charCodeAt(i);
+  return out;
+}
+
+function sessionSecret(env) {
+  const secret = String(env.SESSION_SECRET || '');
+  if (secret.length < 32) {
+    throw new HttpError(503, 'Секрет сессии Cloudflare не настроен. Повторно запустите DEPLOY_CLOUDFLARE_WINDOWS.cmd');
+  }
+  return secret;
+}
+
+async function hmacSha256(env, value) {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(sessionSecret(env)),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  return new Uint8Array(await crypto.subtle.sign('HMAC', key, encoder.encode(String(value))));
+}
+
+async function createSessionToken(env, login, ttlMs) {
+  const now = Date.now();
+  const payload = {
+    v: 1,
+    login: cleanText(login, 100),
+    iat: now,
+    exp: now + ttlMs,
+    nonce: randomToken(12)
+  };
+  const payloadPart = bytesToBase64Url(encoder.encode(JSON.stringify(payload)));
+  const signaturePart = bytesToBase64Url(await hmacSha256(env, payloadPart));
+  return { token: `${payloadPart}.${signaturePart}`, expiresAt: payload.exp };
+}
+
+async function verifySessionToken(env, token) {
+  const parts = String(token || '').split('.');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
+
+  let actualSignature;
+  let expectedSignature;
+  try {
+    actualSignature = base64UrlToBytes(parts[1]);
+    expectedSignature = await hmacSha256(env, parts[0]);
+  } catch (_) {
+    return null;
+  }
+  if (!timingSafeEqualBytes(actualSignature, expectedSignature)) return null;
+
+  let payload;
+  try {
+    payload = JSON.parse(new TextDecoder().decode(base64UrlToBytes(parts[0])));
+  } catch (_) {
+    return null;
+  }
+
+  const expectedLogin = cleanText(env.ADMIN_LOGIN || DEFAULT_ADMIN_LOGIN, 100);
+  const exp = Number(payload?.exp || 0);
+  if (payload?.v !== 1 || payload?.login !== expectedLogin || !Number.isFinite(exp)) return null;
+  return { login: payload.login, expiresAt: exp, expired: exp <= Date.now() };
 }
 
 async function readJson(request, maxBytes = 32 * 1024) {
@@ -246,23 +318,45 @@ function clientIp(request) {
   return cleanText(request.headers.get('CF-Connecting-IP') || 'unknown', 80);
 }
 
+function enforceLoginRateLimit(request, { windowMs = 15 * 60 * 1000, max = 8 } = {}) {
+  const now = Date.now();
+  const key = clientIp(request);
+  const current = loginRateLimits.get(key);
+  if (!current || current.resetAt <= now) {
+    loginRateLimits.set(key, { count: 1, resetAt: now + windowMs });
+    return;
+  }
+  current.count += 1;
+  if (current.count > max) {
+    const retryAfter = Math.max(1, Math.ceil((current.resetAt - now) / 1000));
+    throw new HttpError(429, 'Слишком много попыток входа. Повторите позже.', { 'Retry-After': String(retryAfter) });
+  }
+  if (loginRateLimits.size > 1000) {
+    for (const [entryKey, entry] of loginRateLimits) {
+      if (entry.resetAt <= now) loginRateLimits.delete(entryKey);
+    }
+  }
+}
+
 async function enforceRateLimit(env, request, { prefix, windowMs, max }) {
   const db = dbRequired(env);
   const now = Date.now();
   const resetAt = now + windowMs;
   const key = `${prefix}:${clientIp(request)}`;
-  const result = await db.prepare(`
-    INSERT INTO rate_limits (key, count, reset_at)
-    VALUES (?, 1, ?)
-    ON CONFLICT(key) DO UPDATE SET
-      count = CASE WHEN reset_at <= ? THEN 1 ELSE count + 1 END,
-      reset_at = CASE WHEN reset_at <= ? THEN excluded.reset_at ELSE reset_at END
-    RETURNING count, reset_at
-  `).bind(key, resetAt, now, now).run();
+  const current = await db.prepare('SELECT count, reset_at FROM rate_limits WHERE key = ?').bind(key).first();
 
-  const row = result.results?.[0] || { count: 1, reset_at: resetAt };
-  if (Number(row.count) > max) {
-    const retryAfter = Math.max(1, Math.ceil((Number(row.reset_at) - now) / 1000));
+  if (!current || Number(current.reset_at) <= now) {
+    await db.prepare(`
+      INSERT INTO rate_limits (key, count, reset_at) VALUES (?, 1, ?)
+      ON CONFLICT(key) DO UPDATE SET count = 1, reset_at = excluded.reset_at
+    `).bind(key, resetAt).run();
+    return;
+  }
+
+  const nextCount = Number(current.count || 0) + 1;
+  await db.prepare('UPDATE rate_limits SET count = ? WHERE key = ?').bind(nextCount, key).run();
+  if (nextCount > max) {
+    const retryAfter = Math.max(1, Math.ceil((Number(current.reset_at) - now) / 1000));
     throw new HttpError(429, 'Слишком много запросов. Повторите попытку позже.', { 'Retry-After': String(retryAfter) });
   }
 }
@@ -270,14 +364,9 @@ async function enforceRateLimit(env, request, { prefix, windowMs, max }) {
 async function getAdminSession(env, request) {
   const token = parseCookies(request).airus_admin_session;
   if (!token) return null;
-  const hash = await tokenHash(token);
-  const now = Date.now();
-  const row = await env.DB.prepare('SELECT token_hash, expires_at FROM admin_sessions WHERE token_hash = ?').bind(hash).first();
-  if (!row || Number(row.expires_at) <= now) {
-    if (row) await env.DB.prepare('DELETE FROM admin_sessions WHERE token_hash = ?').bind(hash).run();
-    return { expired: true, hash };
-  }
-  return { expired: false, hash, expiresAt: Number(row.expires_at) };
+  const session = await verifySessionToken(env, token);
+  if (!session) return null;
+  return session;
 }
 
 async function requireAdmin(env, request) {
@@ -358,7 +447,7 @@ async function handleCreateOrder(request, env) {
 }
 
 async function handleLogin(request, env) {
-  await enforceRateLimit(env, request, { prefix: 'login', windowMs: 15 * 60 * 1000, max: 8 });
+  enforceLoginRateLimit(request, { windowMs: 15 * 60 * 1000, max: 8 });
   const body = await readJson(request);
   const login = cleanText(body.login, 100);
   const password = String(body.password || '');
@@ -368,31 +457,20 @@ async function handleLogin(request, env) {
     throw new HttpError(401, 'Неверный логин или пароль');
   }
 
-  const token = randomToken(32);
-  const hash = await tokenHash(token);
-  const now = Date.now();
   const ttlMs = rememberDevice ? REMEMBERED_SESSION_TTL_MS : SESSION_TTL_MS;
-  const expiresAt = now + ttlMs;
-
-  await env.DB.batch([
-    env.DB.prepare('DELETE FROM admin_sessions WHERE expires_at <= ?').bind(now),
-    env.DB.prepare('DELETE FROM rate_limits WHERE reset_at <= ?').bind(now - 24 * 60 * 60 * 1000),
-    env.DB.prepare('INSERT INTO admin_sessions (token_hash, created_at, expires_at) VALUES (?, ?, ?)').bind(hash, now, expiresAt)
-  ]);
-
+  const session = await createSessionToken(env, login, ttlMs);
   const response = json({
     ok: true,
     remembered: rememberDevice,
-    expiresAt,
+    expiresAt: session.expiresAt,
     user: { login: cleanText(env.ADMIN_LOGIN || DEFAULT_ADMIN_LOGIN, 100), role: 'admin' }
   });
-  response.headers.set('Set-Cookie', setSessionCookie(token, ttlMs));
+  response.headers.set('Set-Cookie', setSessionCookie(session.token, ttlMs));
   return response;
 }
 
 async function handleLogout(request, env) {
-  const session = await requireAdminMutation(env, request);
-  await env.DB.prepare('DELETE FROM admin_sessions WHERE token_hash = ?').bind(session.hash).run();
+  await requireAdminMutation(env, request);
   const response = json({ ok: true });
   response.headers.set('Set-Cookie', clearSessionCookie());
   return response;
@@ -543,13 +621,18 @@ async function handleRequest(request, env) {
 
   if (pathname === '/healthz' && method === 'GET') return text('ok');
 
-  const needsDb = pathname.startsWith('/api/') || pathname === '/admin/dashboard.html' || pathname === '/admin' || pathname === '/admin/';
-  if (needsDb) await ensureSchema(env);
-
   if (pathname === '/api/health' && method === 'GET') {
-    const row = await env.DB.prepare('SELECT 1 AS ok').first();
-    return json({ ok: row?.ok === 1, runtime: 'cloudflare-workers', database: 'd1' });
+    try {
+      await ensureSchema(env);
+      const row = await env.DB.prepare('SELECT 1 AS ok').first();
+      return json({ ok: row?.ok === 1, runtime: 'cloudflare-workers', database: 'd1', session: env.SESSION_SECRET ? 'configured' : 'missing' });
+    } catch (error) {
+      const message = error instanceof HttpError ? error.message : 'D1 database error';
+      return json({ ok: false, runtime: 'cloudflare-workers', database: 'error', session: env.SESSION_SECRET ? 'configured' : 'missing', error: message }, 503);
+    }
   }
+
+  if (pathname === '/api/orders' || pathname.startsWith('/api/orders/')) await ensureSchema(env);
 
   if (pathname === '/api/orders' && method === 'POST') return handleCreateOrder(request, env);
   if (pathname === '/api/login' && method === 'POST') return handleLogin(request, env);
