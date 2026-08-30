@@ -1,8 +1,7 @@
 node_modules/
-data/admin-auth.json
-data/*.json
-database.sqlite
-database.sqlite-*
+.wrangler/
+.dev.vars
+.dev.vars.*
 public/static/airus-legacy-manifest.json
 *.log
 .DS_Store

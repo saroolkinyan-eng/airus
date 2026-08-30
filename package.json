@@ -1,20 +1,19 @@
 {
-  "name": "airus-website-crm",
-  "version": "2.4.0",
+  "name": "airus-cloudflare-worker",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "admin:reset": "node scripts/reset-admin.js",
-    "check": "node --check server.js && node --check scripts/import-legacy-assets.js && node --check public/js/site.js && node --check public/js/premium.js && node --check public/js/legacy-media.js && node --check public/js/admin-access.js && node --check public/js/admin-login.js && node --check public/js/admin-dashboard.js",
-    "postinstall": "node scripts/import-legacy-assets.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "node --check src/worker.mjs && node --check scripts/import-legacy-assets.js && node --check public/js/site.js && node --check public/js/premium.js && node --check public/js/legacy-media.js && node --check public/js/admin-access.js && node --check public/js/admin-login.js && node --check public/js/admin-dashboard.js",
     "legacy:import": "node scripts/import-legacy-assets.js",
-    "render:check": "npm run check"
+    "cf:db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "cf:db:migrate:remote": "wrangler d1 migrations apply DB --remote"
   },
-  "dependencies": {
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.7"
+  "devDependencies": {
+    "wrangler": "^4.45.0"
   },
   "engines": {
-    "node": ">=18 <23"
+    "node": ">=20"
   }
 }
