@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>АйRus — вход в панель заказов</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/admin.css?v=26">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-card" aria-labelledby="loginTitle">
+      <a class="admin-brand" href="/"><span>Ай</span>Rus</a>
+      <span class="login-kicker">Закрытая рабочая зона</span>
+      <h1 id="loginTitle">Панель заказов</h1>
+      <p>Введите административные данные. Пароль не хранится в браузере и не публикуется на сайте.</p>
+
+      <form id="loginForm" autocomplete="on">
+        <label class="admin-field">
+          <span>Логин</span>
+          <input id="login" name="username" autocomplete="username" required autofocus>
+        </label>
+        <label class="admin-field">
+          <span>Пароль</span>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <label class="remember-device">
+          <input id="rememberDevice" type="checkbox" checked>
+          <span>Запомнить это устройство на 30 дней</span>
+        </label>
+        <p class="remember-device-note">Пароль не сохраняется. На устройстве остаётся только защищённый токен входа.</p>
+        <button class="admin-btn admin-btn-primary" id="loginButton" type="submit">Войти</button>
+        <div id="loginError" class="login-error" role="alert" aria-live="polite"></div>
+      </form>
+
+      <a class="back-site" href="/">← Вернуться на сайт</a>
+    </section>
+  </main>
+  <script src="../js/admin-login.js?v=9" defer></script>
+</body>
+</html>

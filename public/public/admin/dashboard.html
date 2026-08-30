@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>АйRus — панель заказов</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/admin.css?v=26">
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="admin-container admin-header-inner">
+      <a class="admin-brand" href="/admin/dashboard.html" title="К выбору городов"><span>Ай</span>Rus</a>
+      <div class="admin-header-title">Панель заказов <span id="newOrdersBadge" class="new-orders-badge">0 новых</span></div>
+      <div class="admin-header-tools">
+        <label class="search-shell">
+          <span>⌕</span>
+          <input id="searchInput" placeholder="Имя, телефон, ЖК, адрес" autocomplete="off">
+        </label>
+        <button id="logoutBtn" class="icon-btn" type="button" title="Выйти и забыть это устройство" aria-label="Выйти и забыть это устройство">↪</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="admin-container">
+      <section class="admin-toolbar admin-toolbar-stack">
+        <div class="toolbar-primary-row">
+          <div id="statusTabs" class="status-tabs" aria-label="Фильтр по статусу"></div>
+          <div class="toolbar-actions">
+            <a class="admin-btn admin-btn-secondary" href="/api/orders/export.csv">Экспорт CSV</a>
+            <button class="admin-btn admin-btn-secondary" id="resetViewBtn" type="button">Сбросить</button>
+          </div>
+        </div>
+        <div class="quick-filters" aria-label="Быстрые фильтры">
+          <button class="quick-filter" type="button" data-quick="unread">Непрочитанные <span id="unreadFilterCount">0</span></button>
+          <button class="quick-filter" type="button" data-quick="today">Сегодня</button>
+          <button class="quick-filter" type="button" data-quick-city="Челябинск">Челябинск</button>
+          <button class="quick-filter" type="button" data-quick-city="Уфа">Уфа</button>
+          <select id="serviceFilter" class="quick-filter-select" aria-label="Фильтр по услуге">
+            <option value="">Все услуги</option>
+            <option>Мойка окон и фасадов</option>
+            <option>Очистка крыш от снега</option>
+            <option>Высотные монтажные работы</option>
+            <option>Фасадные работы</option>
+          </select>
+          <button class="quick-filter" type="button" data-quick="duplicates">Дубли телефонов</button>
+        </div>
+      </section>
+
+      <div class="dashboard-grid">
+        <section class="dashboard-panel main-panel">
+          <div class="panel-topline">
+            <nav id="breadcrumbs" class="breadcrumbs" aria-label="Навигация"></nav>
+            <div class="panel-nav-actions">
+              <button id="backToCitiesBtn" class="text-btn" type="button" hidden>← К выбору городов</button>
+              <button id="allAddressesBtn" class="text-btn" type="button" hidden>Все адреса города</button>
+            </div>
+          </div>
+          <div class="panel-title-row">
+            <div>
+              <h1 id="panelTitle">Загрузка…</h1>
+              <p id="panelMeta"></p>
+            </div>
+          </div>
+          <div id="panelContent"></div>
+        </section>
+
+        <aside class="dashboard-panel stats-panel">
+          <div class="panel-title-row"><h2>Сводка</h2></div>
+          <div class="stats-grid" id="statsGrid"></div>
+          <div class="admin-help">
+            <strong>Следующий контакт</strong>
+            <p>В карточке заявки можно сохранить заметку и дату следующего звонка.</p>
+          </div>
+          <a class="admin-btn admin-btn-primary full" href="/admin/dashboard.html">К выбору городов</a>
+          <a class="admin-btn admin-btn-secondary full" href="/">Открыть сайт</a>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <dialog class="order-dialog" id="orderDialog">
+    <form method="dialog" class="dialog-card" id="orderEditForm">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Карточка заявки</span>
+          <h2 id="dialogTitle">Заявка</h2>
+        </div>
+        <button class="dialog-close" type="button" id="closeDialog" aria-label="Закрыть">×</button>
+      </div>
+
+      <div class="dialog-info" id="dialogInfo"></div>
+
+      <label class="admin-field">
+        <span>Следующий контакт</span>
+        <input id="dialogNextContact" type="datetime-local">
+      </label>
+      <label class="admin-field">
+        <span>Заметка администратора</span>
+        <textarea id="dialogNote" rows="5" maxlength="3000" placeholder="Что обсудили, что уточнить, договорённости"></textarea>
+      </label>
+
+      <section class="history-section" aria-labelledby="historyTitle">
+        <div class="history-head"><span>История работы</span><small id="historyMeta">События по заявке</small></div>
+        <div id="dialogHistory" class="order-history"><div class="history-loading">Загрузка истории…</div></div>
+      </section>
+
+      <div class="dialog-actions">
+        <button class="admin-btn admin-btn-secondary" type="button" id="cancelDialog">Отмена</button>
+        <button class="admin-btn admin-btn-primary" type="submit" id="saveDialog">Сохранить</button>
+      </div>
+      <div id="dialogError" class="dialog-error" role="alert"></div>
+    </form>
+  </dialog>
+
+  <script src="../js/admin-dashboard.js?v=20" defer></script>
+</body>
+</html>
